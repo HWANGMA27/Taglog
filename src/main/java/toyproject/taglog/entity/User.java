@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import toyproject.taglog.entity.base.BaseEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,6 +31,12 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role", nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Note> notes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Category> categoryList = new ArrayList<>();
 
     @Builder
     public User(String email, String name, String picture, Role role) {
