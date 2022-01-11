@@ -29,4 +29,24 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Note> note = new ArrayList<>();
+
+    public Category(String name, int order, User user) {
+        this.name = name;
+        this.order = order;
+        this.user = user;
+    }
+
+    public Category(String name, User user) {
+        this.name = name;
+        this.user = user;
+    }
+
+    public void updateCategory(String name, int order){
+        this.name = name;
+        this.order = order;
+    }
+
+    public void reOrderCategory(int order){
+        this.order = order;
+    }
 }
