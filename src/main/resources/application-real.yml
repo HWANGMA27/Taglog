@@ -1,0 +1,22 @@
+spring:
+#  profiles:
+#    include: oauth
+  session:
+    store-type: jdbc
+#    jdbc:
+#      initialize-schema: always
+  jpa:
+    hibernate:
+      ddl-auto:
+    properties:
+      hibernate:
+        #        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 100
+#        use-sql_comment: true #jpql확인
+    open-in-view: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+#    org.hibernate.type: trace
