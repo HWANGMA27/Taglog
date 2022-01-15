@@ -21,5 +21,10 @@ public class NoteTag {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id")
-    private Tag tags;
+    private Tag tag;
+
+    public NoteTag(Note note, Tag tag) {
+        this.note = note;
+        this.tag = tag;
+    }
 }
