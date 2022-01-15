@@ -23,6 +23,16 @@ public class Tag {
     @Column(length = 2)
     private String del_yn;
 
-    @OneToMany(mappedBy = "tags")
+    @OneToMany(mappedBy = "tag")
     private List<NoteTag> noteTag = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Tag(String name, User user) {
+        this.name = name;
+        this.del_yn = "N";
+        this.user = user;
+    }
 }
