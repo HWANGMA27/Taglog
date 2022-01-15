@@ -22,8 +22,8 @@ public class Note extends BaseEntity {
     @Column(name = "note_title")
     private String title;
 
-    @Column(name = "note_contents")
-    private Blob contents;
+    @Column(name = "note_contents", columnDefinition = "Text")
+    private String contents;
 
     @Column(length = 2)
     private String del_yn;
@@ -38,4 +38,18 @@ public class Note extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    public Note(String title, String contents) {
+        this.title = title;
+        this.contents = contents;
+        this.del_yn = "N";
+    }
+
+    public void updateUser(User user){
+        this.user = user;
+    }
+
+    public void updateCategory(Category category){
+        this.category = category;
+    }
 }
