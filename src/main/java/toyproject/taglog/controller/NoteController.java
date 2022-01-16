@@ -16,6 +16,7 @@ import toyproject.taglog.service.TagService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -44,14 +45,14 @@ public class NoteController {
         return noteService.addNote(note, request.getUserId(), request.getCategoryId(), request.getTags());
     }
 
-    @PutMapping
+    @PatchMapping
     public void updateNote(){
 
     }
 
     @DeleteMapping
-    public void deleteNote(@RequestBody @Valid NoteDTO NoteDTO){
-
+    public void deleteNote(@RequestBody @Valid NoteDTO noteDTO){
+        noteService.deleteNote(noteDTO.getUserId(), noteDTO.getNoteId());
     }
 
     @Data

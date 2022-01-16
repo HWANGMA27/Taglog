@@ -27,8 +27,8 @@ public class Category {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "category")
-    private List<Note> note = new ArrayList<>();
+//    @OneToMany(mappedBy = "category")
+//    private List<Note> note = new ArrayList<>();
 
     public Category(String name, int order, User user) {
         this.name = name;

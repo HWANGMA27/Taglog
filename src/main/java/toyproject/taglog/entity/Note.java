@@ -28,8 +28,8 @@ public class Note extends BaseEntity {
     @Column(length = 2)
     private String del_yn;
 
-    @OneToMany(mappedBy = "note")
-    private List<NoteTag> noteTag = new ArrayList<>();
+//    @OneToMany(mappedBy = "note")
+//    private List<NoteTag> noteTag = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -51,5 +51,9 @@ public class Note extends BaseEntity {
 
     public void updateCategory(Category category){
         this.category = category;
+    }
+
+    public void updateNoteStatus(String del_yn){
+        this.del_yn = del_yn;
     }
 }
