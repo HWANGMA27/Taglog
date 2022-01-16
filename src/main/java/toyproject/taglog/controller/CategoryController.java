@@ -17,8 +17,8 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/{user_id}")
-    public List<CategoryDTO> findCategory(@PathVariable("user_id") Long userId){
+    @GetMapping("/{id}")
+    public List<CategoryDTO> findCategory(@PathVariable("id") Long userId){
         return convertToDTO(categoryService.findCategoryByUserId(userId));
     }
 
