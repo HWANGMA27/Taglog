@@ -36,7 +36,7 @@ public class CategoryService {
         Category category = categoryRepository.getByUserIdAndId(categoryDTO.getUserId(), categoryDTO.getCategoryId());
         int order = categoryDTO.getOrder();
         List<Category> reOrderList = findCategoryGoeOrder(categoryDTO.getUserId(), order);
-        addOrderCategories(reOrderList, order);
+        addOrderCategories(reOrderList);
         category.updateCategory(categoryDTO.getName(), order);
         return findCategoryByUserId(categoryDTO.getUserId());
     }
@@ -54,7 +54,8 @@ public class CategoryService {
     public List<Category> addCategory(CategoryDTO categoryDTO) {
         User user = userRepository.findById(categoryDTO.getUserId()).get();
         List<Category> reOrderList =  findCategoryGoeOrder(categoryDTO.getUserId(), 1);
-        addOrderCategories(reOrderList, 1);
+        addOrderCategories(reOrderList);
+
         Category category = new Category(categoryDTO.getName(), 1, user);
         categoryRepository.save(category);
         return findCategoryByUserId(categoryDTO.getUserId());
@@ -69,11 +70,9 @@ public class CategoryService {
         return categoryList;
     }
 
-    private void addOrderCategories(List<Category> categories, int offset){
-        int reorder = offset;
+    private void addOrderCategories(List<Category> categories){
         for (Category category : categories) {
-            reorder += 1;
-            category.reOrderCategory(reorder);
+            category.reOrderCategory(category.getOrder()+1);
             categoryRepository.save(category);
         }
     }
