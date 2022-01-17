@@ -146,7 +146,8 @@ class NoteServiceTest {
     public void updateNoteTest() throws Exception{
         //given
         note.updateContents("바뀐 타이틀", "바뀐 컨텐츠");
-        noteService.updateNote(note, note.getId(), user.getId(), category.getId(), null);
+        ArrayList<Tag> tags = new ArrayList<>();
+        noteService.updateNote(note, note.getId(), user.getId(), category.getId(), tags);
         em.flush();
         em.clear();
 
