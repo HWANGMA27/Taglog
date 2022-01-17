@@ -7,12 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import toyproject.taglog.dto.CategoryDTO;
 import toyproject.taglog.entity.Category;
 import toyproject.taglog.entity.User;
+import toyproject.taglog.exception.CategoryNotFoundException;
 import toyproject.taglog.repository.CategoryRepository;
 import toyproject.taglog.repository.UserRepository;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 import static toyproject.taglog.entity.QCategory.*;
 
@@ -81,6 +83,15 @@ public class CategoryService {
         for (Category category : categories) {
             category.reOrderCategory(category.getOrder()-1);
             categoryRepository.save(category);
+        }
+    }
+
+    public Category findCategoryById(Long categoryId) {
+        Optional<Category> findCategory = categoryRepository.findById(categoryId);
+        if(findCategory.isEmpty()){
+            throw new CategoryNotFoundException("카테고리가 존재하지 않습니다.");
+        }else{
+            return findCategory.get();
         }
     }
 }
