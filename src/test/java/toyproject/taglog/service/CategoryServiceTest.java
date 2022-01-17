@@ -2,6 +2,7 @@ package toyproject.taglog.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,16 +21,18 @@ import java.util.List;
 
 @SpringBootTest
 @Transactional
+@Commit
 class CategoryServiceTest {
 
     @Autowired
-    private CategoryService categoryService;
+    CategoryService categoryService;
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
     @Autowired
-    private CategoryRepository categoryRepository;
+    CategoryRepository categoryRepository;
     @PersistenceContext
-    private EntityManager em;
+    EntityManager em;
+
     User user;
     Category category;
 
@@ -38,22 +41,24 @@ class CategoryServiceTest {
         user = new User("email", "name", "picture", Role.USER);
         userRepository.save(user);
 
-        category = new Category("테스트 카테고리", 1, user);
-        Category category2 = new Category("테스트 카테고리2", 2, user);
+        category = new Category("테스트 카테고리", 2, user);
+        Category category2 = new Category("테스트 카테고리2", 1, user);
         categoryRepository.save(category);
         categoryRepository.save(category2);
         em.flush();
         em.clear();
     }
 
+    @DisplayName("사용자의 카테고리 출력 테스트")
     @Test
-    public void findMemberTest() throws Exception{
+    public void findCategoryTest() throws Exception{
         //when
         List<Category> result = categoryService.findCategoryByUserId(user.getId());
         //then
         Assertions.assertThat(result.size()).isEqualTo(2);
     }
 
+    @DisplayName("카테고리 추가 테스트")
     @Test
     public void addCategoryTest() throws Exception{
         //given
@@ -77,6 +82,7 @@ class CategoryServiceTest {
                 .contains("테스트 카테고리3", "테스트 카테고리4");
     }
 
+    @DisplayName("카테고리 삭제 테스트")
     @Test
     public void deleteCategoryTest() throws Exception{
         //given
@@ -96,6 +102,7 @@ class CategoryServiceTest {
                 .doesNotContain("테스트 카테고리");
     }
 
+    @DisplayName("카테고리 수정 테스트")
     @Test
     public void updateCategoryTest() throws Exception{
         //given
