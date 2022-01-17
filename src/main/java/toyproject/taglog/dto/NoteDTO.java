@@ -2,13 +2,8 @@ package toyproject.taglog.dto;
 
 import lombok.Data;
 import toyproject.taglog.entity.Note;
-import toyproject.taglog.entity.Tag;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.sql.Blob;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,13 +16,11 @@ public class NoteDTO {
     @NotNull
     private Long categoryId;
 
-    @NotNull
     private String title;
 
-    @NotNull
     private String contents;
 
-    private List<TagDTO> tag;
+    private List<TagDTO> tags;
 
     private LocalDateTime createdTime;
 

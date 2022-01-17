@@ -4,14 +4,14 @@ import lombok.Data;
 
 @Data
 public class TagDTO {
-    private Long tagId;
+    private Long id;
     private String name;
 
     public TagDTO() {
     }
 
-    public TagDTO(Long tagId, String name) {
-        this.tagId = tagId;
+    public TagDTO(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 

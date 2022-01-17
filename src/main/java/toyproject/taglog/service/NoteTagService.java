@@ -8,6 +8,8 @@ import toyproject.taglog.entity.NoteTag;
 import toyproject.taglog.entity.Tag;
 import toyproject.taglog.repository.NoteTagRepository;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -17,7 +19,16 @@ public class NoteTagService {
 
     @Transactional
     public void addNoteTage(Note note, Tag tag) {
-        NoteTag noteTag = new NoteTag(note, tag);
+        NoteTag noteTag = new NoteTag(note, tag, note.getUser());
         noteTagRepository.save(noteTag);
+    }
+
+    @Transactional
+    public void deleteNoteTag(Long noteId) {
+        noteTagRepository.bulkDelete(noteId);
+    }
+
+    public List<NoteTag> findNoteTagByNoteId (Long noteId){
+        return noteTagRepository.findNoteTagByNoteId(noteId);
     }
 }

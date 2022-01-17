@@ -23,8 +23,13 @@ public class NoteTag {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
-    public NoteTag(Note note, Tag tag) {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public NoteTag(Note note, Tag tag, User user) {
         this.note = note;
         this.tag = tag;
+        this.user = user;
     }
 }

@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.*;
 import toyproject.taglog.dto.NoteDTO;
 import toyproject.taglog.dto.TagDTO;
 import toyproject.taglog.entity.Note;
+import toyproject.taglog.entity.Tag;
 import toyproject.taglog.service.NoteService;
 import toyproject.taglog.service.NoteTagService;
 import toyproject.taglog.service.TagService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.websocket.server.PathParam;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,17 +43,31 @@ public class NoteController {
     @PostMapping
     public NoteDTO addNote(@RequestBody @Valid AddNoteRequest request){
         Note note = new Note(request.getTitle(), request.getContents());
-        return noteService.addNote(note, request.getUserId(), request.getCategoryId(), request.getTags());
+        List<Tag> tags = request.getTags()
+                .stream()
+                .map(tagDTO -> new Tag(tagDTO.getName()))
+                .collect(Collectors.toList());
+        return noteService.addNote(note, request.getUserId(), request.getCategoryId(), tags);
     }
 
     @PatchMapping
-    public void updateNote(){
+    public NoteDTO updateNote(@RequestBody @Valid NoteDTO noteDTO){
+        Note note = new Note(noteDTO.getTitle(), noteDTO.getContents());
+        List<Tag> tags = noteDTO.getTags()
+                .stream()
+                .map(tagDTO -> new Tag(tagDTO.getName()))
+                .collect(Collectors.toList());
+        return noteService.updateNote(note, noteDTO.getNoteId(), noteDTO.getUserId(), noteDTO.getCategoryId(), tags);
+    }
 
+    @PatchMapping("/category")
+    public void updateNoteCategory(@RequestBody @Valid NoteDTO noteDTO){
+        noteService.updateNoteCategory(noteDTO.getNoteId(), noteDTO.getCategoryId());
     }
 
     @DeleteMapping
-    public void deleteNote(@RequestBody @Valid NoteDTO noteDTO){
-        noteService.deleteNote(noteDTO.getUserId(), noteDTO.getNoteId());
+    public void deleteNote(@RequestBody @Valid DeleteNoteRequest request){
+        noteService.deleteNote(request.getUserId(), request.getNoteId());
     }
 
     @Data
@@ -69,6 +84,39 @@ public class NoteController {
         private String contents;
 
         private List<TagDTO> tags ;
+
+        @NotNull
+        private Long userId;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static class DeleteNoteRequest {
+        @NotNull
+        private Long noteId;
+
+        @NotNull
+        private Long userId;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static class UpdateNoteRequest {
+        @NotNull
+        private Long categoryId;
+
+        @NotNull
+        private String title;
+
+        @NotNull
+        private String contents;
+
+        private List<TagDTO> tags ;
+
+        @NotNull
+        private Long noteId;
 
         @NotNull
         private Long userId;

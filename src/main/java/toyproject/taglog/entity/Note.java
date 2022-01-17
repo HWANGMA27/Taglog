@@ -6,9 +6,6 @@ import lombok.NoArgsConstructor;
 import toyproject.taglog.entity.base.BaseEntity;
 
 import javax.persistence.*;
-import java.sql.Blob;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,7 +23,7 @@ public class Note extends BaseEntity {
     private String contents;
 
     @Column(length = 2)
-    private String del_yn;
+    private String delYn;
 
 //    @OneToMany(mappedBy = "note")
 //    private List<NoteTag> noteTag = new ArrayList<>();
@@ -42,7 +39,7 @@ public class Note extends BaseEntity {
     public Note(String title, String contents) {
         this.title = title;
         this.contents = contents;
-        this.del_yn = "N";
+        this.delYn = "N";
     }
 
     public void updateUser(User user){
@@ -53,7 +50,12 @@ public class Note extends BaseEntity {
         this.category = category;
     }
 
-    public void updateNoteStatus(String del_yn){
-        this.del_yn = del_yn;
+    public void updateNoteStatus(String delYn){
+        this.delYn = delYn;
+    }
+
+    public void updateContents(String title, String contents){
+        this.title = title;
+        this.contents = contents;
     }
 }
