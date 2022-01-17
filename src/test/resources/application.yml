@@ -3,9 +3,39 @@ spring:
     show_sql: true
   properties:
     hibernate:
+      ddl-auto: create
       dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   h2:
     console:
       enabled: true
   session:
     store-type: jdbc
+#운영db
+#spring:
+#  datasource:
+#    url: jdbc:mariadb://taglog.ciow89fatena.ap-northeast-2.rds.amazonaws.com:3306/taglog
+#    username: admin
+#    password: a1s2d3f4!
+#    driver-class-name: org.mariadb.jdbc.Driver
+#  #  profiles:
+#  #    include: oauth
+#  session:
+#    store-type: jdbc
+#  #    jdbc:
+#  #      initialize-schema: always
+#  jpa:
+#    hibernate:
+#      ddl-auto:
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+#        #        show_sql: true
+#        format_sql: true
+#        default_batch_fetch_size: 100
+#    #        use-sql_comment: true #jpql확인
+#    open-in-view: true
+#
+#logging:
+#  level:
+#    org.hibernate.SQL: debug
+##    org.hibernate.type: trace
