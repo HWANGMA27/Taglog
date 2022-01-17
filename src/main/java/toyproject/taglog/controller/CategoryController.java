@@ -27,7 +27,7 @@ public class CategoryController {
         return convertToDTO(categoryService.addCategory(categoryDTO));
     }
 
-    @PutMapping
+    @PatchMapping
     public List<CategoryDTO> updateCategory(@RequestBody @Valid CategoryDTO categoryDTO){
         return convertToDTO(categoryService.updateCategory(categoryDTO));
     }
