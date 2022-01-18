@@ -31,4 +31,12 @@ public class NoteTagService {
     public List<NoteTag> findNoteTagByNoteId (Long noteId){
         return noteTagRepository.findNoteTagByNoteId(noteId);
     }
+
+    public List<NoteTag> findNoteTagByUserId(Long userId) {
+        return noteTagRepository.findNoteTagByUserId(userId);
+    }
+
+    public List<Note> findNoteTagByUserIdAndTagId(Long userId, Long tagId) {
+        return noteTagRepository.findNoteTagByUserIdAndTagId(userId, tagId);
+    }
 }

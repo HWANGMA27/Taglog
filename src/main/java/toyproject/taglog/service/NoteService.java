@@ -60,18 +60,19 @@ public class NoteService {
         return new PageImpl<>(returnDTO, pageable, listSize);
     }
 
-    public NoteDTO findByIdAndDelYn(Long noteId, String delYn) {
-        Optional<Note> findNote = noteRepository.findByIdAndDelYn(noteId, delYn);
+    public NoteDTO findNoteById(Long noteId) {
+        Optional<Note> findNote = noteRepository.findByIdAndDelYn(noteId, "N");
         if (findNote.isEmpty()) {
-            if (delYn.equals("Y")) {
-                throw new NoteNotFoundException("삭제된 노트가 없습니다.");
-            } else {
-                throw new NoteNotFoundException("노트가 존재하지 않습니다.");
-            }
+            throw new NoteNotFoundException("노트가 존재하지 않습니다.");
         } else {
-            return new NoteDTO(findNote.get());
+            Note note = findNote.get();
+            List<TagDTO> tagByNote = findTagByNote(note);
+            NoteDTO noteDTO = new NoteDTO(note);
+            noteDTO.setTags(tagByNote);
+            return noteDTO;
         }
     }
+
 
     private List<TagDTO> findTagByNote(Note note) {
         List<NoteTag> noteTag = noteTagService.findNoteTagByNoteId(note.getId());
@@ -84,6 +85,19 @@ public class NoteService {
                 .map(tag -> new TagDTO(tag.getId(), tag.getName()))
                 .collect(Collectors.toList());
         return tagDTOList;
+    }
+
+    public NoteDTO findNoteByIdAndDelYn(Long noteId, String delYn) {
+        Optional<Note> findNote = noteRepository.findByIdAndDelYn(noteId, delYn);
+        if (findNote.isEmpty()) {
+            if (delYn.equals("Y")) {
+                throw new NoteNotFoundException("삭제된 노트가 없습니다.");
+            } else {
+                throw new NoteNotFoundException("노트가 존재하지 않습니다.");
+            }
+        } else {
+            return new NoteDTO(findNote.get());
+        }
     }
 
     @Transactional
@@ -164,5 +178,21 @@ public class NoteService {
             note.updateCategory(findCategory);
             noteRepository.save(note);
         }
+    }
+
+    public List<NoteDTO> findNoteByTag(Long userId, Long tagId) {
+        List<Note> notes = noteTagService.findNoteTagByUserIdAndTagId(userId, tagId);
+        List<NoteDTO> noteDTOS = new ArrayList<>();
+
+        for (Note note : notes) {
+            NoteDTO noteDTO = new NoteDTO(note);
+            List<Tag> tags = tagService.findTagByNoteId(note.getId());
+            noteDTO.setTags(tags.stream()
+                    .map(tag -> new TagDTO(tag.getId(), tag.getName()))
+                    .collect(Collectors.toList()));
+            noteDTOS.add(noteDTO);
+        }
+
+        return noteDTOS;
     }
 }
