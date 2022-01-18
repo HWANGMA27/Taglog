@@ -34,11 +34,10 @@ public class NoteController {
         return noteService.findAllNoteByUserId(userId, pageable);
     }
 
-//    @GetMapping("/{user_id}/{category_id}")
-//    public Slice<NoteDTO> findNoteByCategory(@PathVariable("user_id") Long userId,
-//                                             @PathVariable("category_id") Long categoryId){
-//        noteService.find
-//    }
+    @GetMapping("/{note_id}")
+    public NoteDTO findNoteById(@PathVariable("note_id") Long noteId){
+        return noteService.findNoteByIdAndDelYn(noteId, "N");
+    }
 
     @PostMapping
     public NoteDTO addNote(@RequestBody @Valid AddNoteRequest request){
