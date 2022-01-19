@@ -1,10 +1,14 @@
 package toyproject.taglog.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 import toyproject.taglog.dto.CategoryDTO;
+import toyproject.taglog.dto.NoteDTO;
 import toyproject.taglog.entity.Category;
 import toyproject.taglog.service.CategoryService;
+import toyproject.taglog.service.NoteService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -16,10 +20,17 @@ import java.util.stream.Collectors;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final NoteService noteService;
 
     @GetMapping("/{id}")
     public List<CategoryDTO> findCategory(@PathVariable("id") Long userId){
         return convertToDTO(categoryService.findCategoryByUserId(userId));
+    }
+
+    @GetMapping("/{category_id}/user/{id}")
+    public Slice<NoteDTO> findNoteByCategory(@PathVariable("category_id") Long categoryId,
+                                             @PathVariable("id") Long userId, Pageable pageable){
+        return noteService.findNoteByCategory(userId, categoryId, pageable);
     }
 
     @PostMapping

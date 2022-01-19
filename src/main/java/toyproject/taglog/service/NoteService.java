@@ -60,19 +60,31 @@ public class NoteService {
         return new PageImpl<>(returnDTO, pageable, listSize);
     }
 
-    public NoteDTO findNoteById(Long noteId) {
-        Optional<Note> findNote = noteRepository.findByIdAndDelYn(noteId, "N");
-        if (findNote.isEmpty()) {
-            throw new NoteNotFoundException("노트가 존재하지 않습니다.");
-        } else {
-            Note note = findNote.get();
-            List<TagDTO> tagByNote = findTagByNote(note);
-            NoteDTO noteDTO = new NoteDTO(note);
-            noteDTO.setTags(tagByNote);
-            return noteDTO;
-        }
-    }
+    public Slice<NoteDTO> findNoteByCategory(Long userId, Long categoryId, Pageable pageable) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
+        List<Note> results = queryFactory
+                .selectFrom(note)
+                .where(note.user.id.eq(userId), note.delYn.eq("N")
+                        , note.category.id.eq(categoryId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long listSize = noteRepository.countByUserIdAndCategoryId(userId, categoryId);
+
+        List<NoteDTO> returnDTO = new ArrayList<>();
+
+        for (Note result : results) {
+            NoteDTO noteDTO = new NoteDTO(result);
+
+            List<TagDTO> tagDTOList = findTagByNote(result);
+            noteDTO.setTags(tagDTOList);
+            returnDTO.add(noteDTO);
+        }
+
+        return new PageImpl<>(returnDTO, pageable, listSize);
+    }
 
     private List<TagDTO> findTagByNote(Note note) {
         List<NoteTag> noteTag = noteTagService.findNoteTagByNoteId(note.getId());
