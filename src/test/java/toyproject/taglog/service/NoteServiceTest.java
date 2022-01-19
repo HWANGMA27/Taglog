@@ -40,6 +40,7 @@ class NoteServiceTest {
     User user;
     Category category;
     Note note;
+    Tag tag, tag2;
 
     @BeforeEach
     public void beforeEach() throws Exception{
@@ -49,8 +50,8 @@ class NoteServiceTest {
         category = new Category("테스트 카테고리", 2, user);
         categoryRepository.save(category);
 
-        Tag tag = new Tag("테스트 태그");
-        Tag tag2 = new Tag("테스트 태그2");
+        tag = new Tag("테스트 태그");
+        tag2 = new Tag("테스트 태그2");
         tagRepository.save(tag);
         tagRepository.save(tag2);
 
@@ -82,7 +83,7 @@ class NoteServiceTest {
 
         //then
         Assertions.assertThrows(NoteNotFoundException.class, () -> {
-            noteService.findByIdAndDelYn(note.getId(), "N");
+            noteService.findNoteByIdAndDelYn(note.getId(), "N");
         });
         //노트 삭제 후 연결된 중간테이블 데이터 삭제 확인
         org.assertj.core.api.Assertions.assertThat(noteTagByNoteId.size())
