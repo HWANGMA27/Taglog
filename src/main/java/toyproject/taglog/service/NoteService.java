@@ -10,14 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import toyproject.taglog.dto.NoteDTO;
 import toyproject.taglog.dto.TagDTO;
 import toyproject.taglog.entity.*;
-import toyproject.taglog.exception.NoteNotFoundException;
+import toyproject.taglog.exception.invalid.InvalidateNoteException;
 import toyproject.taglog.repository.CategoryRepository;
 import toyproject.taglog.repository.NoteRepository;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static toyproject.taglog.entity.QNote.note;
@@ -100,16 +99,8 @@ public class NoteService {
     }
 
     public NoteDTO findNoteByIdAndDelYn(Long noteId, String delYn) {
-        Optional<Note> findNote = noteRepository.findByIdAndDelYn(noteId, delYn);
-        if (findNote.isEmpty()) {
-            if (delYn.equals("Y")) {
-                throw new NoteNotFoundException("삭제된 노트가 없습니다.");
-            } else {
-                throw new NoteNotFoundException("노트가 존재하지 않습니다.");
-            }
-        } else {
-            return new NoteDTO(findNote.get());
-        }
+        Note findNote = noteRepository.findByIdAndDelYn(noteId, delYn).orElseThrow(InvalidateNoteException::new);
+        return new NoteDTO(findNote);
     }
 
     @Transactional
@@ -133,15 +124,10 @@ public class NoteService {
 
     @Transactional
     public void deleteNote(Long userId, Long noteId) {
-        Optional<Note> findNote = noteRepository.findByIdAndUserIdAndDelYn(noteId, userId, "N");
-        if (findNote.isEmpty()) {
-            throw new NoteNotFoundException("노트가 존재하지 않습니다.");
-        } else {
-            Note note = findNote.get();
-            note.updateNoteStatus("Y");
-            noteRepository.save(note);
-            noteTagService.deleteNoteTag(noteId);
-        }
+        Note findNote = noteRepository.findByIdAndUserIdAndDelYn(noteId, userId, "N").orElseThrow(InvalidateNoteException::new);
+        findNote.updateNoteStatus("Y");
+        noteRepository.save(findNote);
+        noteTagService.deleteNoteTag(noteId);
     }
 
     @Transactional
@@ -149,7 +135,7 @@ public class NoteService {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         //원본 노트를 가져와서 request내용으로 변경 작업
-        Note orgNote = noteRepository.getById(noteId);
+        Note orgNote = noteRepository.getNoteById(noteId).orElseThrow(InvalidateNoteException::new);
         Category newCategory = categoryService.findCategoryById(categoryId);
 
         if (!orgNote.getCategory().equals(newCategory)) {
@@ -180,17 +166,11 @@ public class NoteService {
 
     @Transactional
     public void updateNoteCategory(Long noteId, Long categoryId) {
-        Optional<Note> findNote = noteRepository.findByIdAndDelYn(noteId, "N");
+        Note findNote = noteRepository.findByIdAndDelYn(noteId, "N").orElseThrow(InvalidateNoteException::new);
         Category findCategory = categoryService.findCategoryById(categoryId);
-
-        if (findNote.isEmpty()) {
-            throw new NoteNotFoundException("변경할 노트가 존재하지 않습니다.");
-        } else {
-            Note note = findNote.get();
-            note.updateCategory(findCategory);
-            noteRepository.save(note);
-        }
-    }
+        findNote.updateCategory(findCategory);
+        noteRepository.save(findNote);
+     }
 
     public List<NoteDTO> findNoteByTag(Long userId, Long tagId) {
         List<Note> notes = noteTagService.findNoteTagByUserIdAndTagId(userId, tagId);

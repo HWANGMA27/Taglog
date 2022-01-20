@@ -7,8 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import toyproject.taglog.dto.NoteDTO;
 import toyproject.taglog.entity.*;
-import toyproject.taglog.exception.NoteNotFoundException;
+import toyproject.taglog.exception.invalid.InvalidateNoteException;
 import toyproject.taglog.repository.*;
 
 import javax.persistence.EntityManager;
@@ -82,7 +83,7 @@ class NoteServiceTest {
         List<NoteTag> noteTagByNoteId = noteTagService.findNoteTagByNoteId(noteId);
 
         //then
-        Assertions.assertThrows(NoteNotFoundException.class, () -> {
+        Assertions.assertThrows(InvalidateNoteException.class, () -> {
             noteService.findNoteByIdAndDelYn(note.getId(), "N");
         });
         //노트 삭제 후 연결된 중간테이블 데이터 삭제 확인
@@ -132,16 +133,6 @@ class NoteServiceTest {
         org.assertj.core.api.Assertions.assertThat(findNote.getCategory().getName()).isEqualTo(newCategory.getName());
     }
 
-    @DisplayName("노트 없는 카테고리 변경 예외처리 테스트")
-    @Test
-    public void updateNoteNotExistCategoryTest() throws Exception{
-        //given
-
-        //when
-
-        //then
-    }
-
     @DisplayName("노트 컨텐츠 변경 테스트")
     @Test
     public void updateNoteTest() throws Exception{
@@ -159,5 +150,30 @@ class NoteServiceTest {
         org.assertj.core.api.Assertions.assertThat(findNote.getTitle()).isEqualTo(note.getTitle());
         org.assertj.core.api.Assertions.assertThat(findNote.getContents()).isEqualTo(note.getContents());
 
+    }
+
+    @DisplayName("선택한 태그가 있는 노트만 가져오는 테스트")
+    @Test
+    public void findNoteByTagTest() throws Exception{
+        //given
+        Tag newTag = new Tag("새로운 태그");
+        tagRepository.save(newTag);
+
+        note = new Note("타이틀", "컨텐츠");
+        note.updateCategory(category);
+        note.updateNoteStatus("N");
+        note.updateUser(user);
+        noteRepository.save(note);
+
+        NoteTag noteTag = new NoteTag(note, newTag, user);
+        noteTagRepository.save(noteTag);
+
+        em.flush();
+        em.clear();
+
+        //when
+        List<NoteDTO> noteByTag = noteService.findNoteByTag(user.getId(), newTag.getId());
+        //then
+        org.assertj.core.api.Assertions.assertThat(noteByTag.size()).isEqualTo(1);
     }
 }

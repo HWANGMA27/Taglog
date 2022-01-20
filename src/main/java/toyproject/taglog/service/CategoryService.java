@@ -7,16 +7,15 @@ import org.springframework.transaction.annotation.Transactional;
 import toyproject.taglog.dto.CategoryDTO;
 import toyproject.taglog.entity.Category;
 import toyproject.taglog.entity.User;
-import toyproject.taglog.exception.CategoryNotFoundException;
+import toyproject.taglog.exception.invalid.InvalidateCategoryException;
 import toyproject.taglog.repository.CategoryRepository;
 import toyproject.taglog.repository.UserRepository;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 
-import static toyproject.taglog.entity.QCategory.*;
+import static toyproject.taglog.entity.QCategory.category;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +34,8 @@ public class CategoryService {
 
     @Transactional
     public List<Category> updateCategory(CategoryDTO categoryDTO){
-        Category category = categoryRepository.getByUserIdAndId(categoryDTO.getUserId(), categoryDTO.getCategoryId());
+        Category category = categoryRepository.getByUserIdAndId(categoryDTO.getUserId(), categoryDTO.getCategoryId())
+                .orElseThrow(InvalidateCategoryException::new);
         int order = categoryDTO.getOrder();
         List<Category> reOrderList = findCategoryGoeOrder(categoryDTO.getUserId(), order);
         addOrderCategories(reOrderList);
@@ -45,7 +45,8 @@ public class CategoryService {
 
     @Transactional
     public List<Category> deleteCategory(Long userId, Long category_id) {
-        Category category = categoryRepository.getByUserIdAndId(userId, category_id);
+        Category category = categoryRepository.getByUserIdAndId(userId, category_id)
+                .orElseThrow(InvalidateCategoryException::new);
         List<Category> reOrderList = findCategoryGoeOrder(userId, category.getOrder());
         minusOrderCategories(reOrderList);
         categoryRepository.delete(category);
@@ -87,11 +88,6 @@ public class CategoryService {
     }
 
     public Category findCategoryById(Long categoryId) {
-        Optional<Category> findCategory = categoryRepository.findById(categoryId);
-        if(findCategory.isEmpty()){
-            throw new CategoryNotFoundException("카테고리가 존재하지 않습니다.");
-        }else{
-            return findCategory.get();
-        }
+        return categoryRepository.findById(categoryId).orElseThrow(InvalidateCategoryException::new);
     }
 }

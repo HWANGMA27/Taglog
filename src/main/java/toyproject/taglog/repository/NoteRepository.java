@@ -15,4 +15,6 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
     Optional<Note> findByIdAndUserIdAndDelYn(@Param("id") Long noteId, @Param("userId") Long userId, @Param("delYn") String delYN);
 
     long countByUserIdAndCategoryId(Long userId, Long categoryId);
+
+    Optional<Note> getNoteById(Long noteId);
 }
