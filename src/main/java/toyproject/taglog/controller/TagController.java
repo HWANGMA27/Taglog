@@ -1,5 +1,9 @@
 package toyproject.taglog.controller;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,14 +22,16 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/tag")
+@ApiOperation(value = "Tag API")
 public class TagController {
 
     private final TagService tagService;
     private final NoteTagService noteTagService;
     private final NoteService noteService;
 
+    @Operation(summary = "태그 전체 조회", description = "회원 Id로 태그를 전체 조회합니다.")
     @GetMapping("/all/{id}")
-    public List<TagDTO> findAllTag(@PathVariable("id") Long userId){
+    public List<TagDTO> findAllTag(@Parameter(description = "회원 Id", in = ParameterIn.PATH) @PathVariable("id") Long userId){
         List<NoteTag> noteTagList = noteTagService.findNoteTagByUserId(userId);
         return noteTagList.stream()
                 .map(NoteTag::getTag)
@@ -34,9 +40,10 @@ public class TagController {
                 .collect(Collectors.toList());
     }
 
+    @Operation(summary = "태그된 노트 조회", description = "회원 Id와 태그 Id로 노트를 조회합니다.")
     @GetMapping("/{tag_id}/user/{id}")
-    public List<NoteDTO> findNoteByTag(@PathVariable("id") Long userId,
-                                       @PathVariable("tag_id") Long tagId){
+    public List<NoteDTO> findNoteByTag(@Parameter(description = "회원 Id", in = ParameterIn.PATH) @PathVariable("id") Long userId,
+                                       @Parameter(description = "태그 Id", in = ParameterIn.PATH) @PathVariable("tag_id") Long tagId){
         return noteService.findNoteByTag(userId, tagId);
     }
 }
