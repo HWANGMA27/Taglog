@@ -187,4 +187,8 @@ public class NoteService {
 
         return noteDTOS;
     }
+
+    public void bulkDeleteNoteByCategoryId(Long categoryId) {
+        noteRepository.bulkDeleteNoteByCategoryId(categoryId);
+    }
 }

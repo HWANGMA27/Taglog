@@ -1,6 +1,8 @@
 package toyproject.taglog.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import toyproject.taglog.entity.Note;
 
@@ -17,4 +19,8 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
     long countByUserIdAndCategoryId(Long userId, Long categoryId);
 
     Optional<Note> getNoteById(Long noteId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("update Note N set N.delYn = 'Y', N.category.id = null where N.category.id = :categoryId")
+    void bulkDeleteNoteByCategoryId(@Param("categoryId") Long categoryId);
 }

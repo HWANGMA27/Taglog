@@ -9,6 +9,7 @@ import toyproject.taglog.entity.Category;
 import toyproject.taglog.entity.User;
 import toyproject.taglog.exception.invalid.InvalidateCategoryException;
 import toyproject.taglog.repository.CategoryRepository;
+import toyproject.taglog.repository.NoteRepository;
 import toyproject.taglog.repository.UserRepository;
 
 import javax.persistence.EntityManager;
@@ -24,6 +25,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final NoteRepository noteRepository;
     private final EntityManager em;
     private JPAQueryFactory jpaQueryFactory;
 
@@ -44,8 +46,9 @@ public class CategoryService {
     }
 
     @Transactional
-    public List<Category> deleteCategory(Long userId, Long category_id) {
-        Category category = categoryRepository.getByUserIdAndId(userId, category_id)
+    public List<Category> deleteCategory(Long userId, Long categoryId) {
+        noteRepository.bulkDeleteNoteByCategoryId(categoryId);
+        Category category = categoryRepository.getByUserIdAndId(userId, categoryId)
                 .orElseThrow(InvalidateCategoryException::new);
         List<Category> reOrderList = findCategoryGoeOrder(userId, category.getOrder());
         minusOrderCategories(reOrderList);
