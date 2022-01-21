@@ -1,5 +1,6 @@
 package toyproject.taglog.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import toyproject.taglog.entity.Note;
@@ -28,10 +29,12 @@ public class NoteDTO {
 
     @Schema(description = "노트에 포함된 태그")
     private List<TagDTO> tags;
-
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Schema(description = "생성일자")
     private LocalDateTime createdTime;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Schema(description = "변경일자")
     private LocalDateTime lastModifiedTime;
 
