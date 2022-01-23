@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import toyproject.taglog.entity.*;
+import toyproject.taglog.repository.condition.NoteSearchCondition;
+import toyproject.taglog.repository.querydsl.NoteDSLRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +20,8 @@ import java.util.Optional;
 class NoteRepositoryTest {
     @Autowired
     NoteRepository noteRepository;
+    @Autowired
+    NoteDSLRepository noteDSLRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -65,7 +69,9 @@ class NoteRepositoryTest {
     @Test
     public void countNoteListSizeTest() throws Exception{
         //when
-        long noteListSize = noteRepository.countByUserId(user.getId());
+        NoteSearchCondition condition = new NoteSearchCondition();
+        condition.setUserId(user.getId());
+        long noteListSize = noteDSLRepository.countNotesWithCondition(condition);
         //then
         Assertions.assertThat(noteListSize).isEqualTo(1);
     }

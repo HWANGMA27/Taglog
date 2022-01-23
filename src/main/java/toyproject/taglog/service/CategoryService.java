@@ -1,6 +1,5 @@
 package toyproject.taglog.service;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,12 +10,11 @@ import toyproject.taglog.exception.invalid.InvalidateCategoryException;
 import toyproject.taglog.repository.CategoryRepository;
 import toyproject.taglog.repository.NoteRepository;
 import toyproject.taglog.repository.UserRepository;
+import toyproject.taglog.repository.condition.CategorySearchCondition;
+import toyproject.taglog.repository.querydsl.CategoryDSLRepository;
 
-import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-
-import static toyproject.taglog.entity.QCategory.category;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +22,9 @@ import static toyproject.taglog.entity.QCategory.category;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryDSLRepository categoryDSLRepository;
     private final UserRepository userRepository;
     private final NoteRepository noteRepository;
-    private final EntityManager em;
-    private JPAQueryFactory jpaQueryFactory;
 
     public List<Category> findCategoryByUserId(Long userId){
         User user = userRepository.findById(userId).get();
@@ -68,12 +65,9 @@ public class CategoryService {
     }
 
     private List<Category> findCategoryGoeOrder(@NotNull Long userId, int order){
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-        List<Category> categoryList = queryFactory
-                .selectFrom(category)
-                .where(category.user.id.eq(userId), category.order.goe(order))
-                .fetch();
-        return categoryList;
+        CategorySearchCondition condition = new CategorySearchCondition();
+        condition.setUserId(userId);
+        return categoryDSLRepository.findCategoryWithCondition(condition);
     }
 
     private void addOrderCategories(List<Category> categories){

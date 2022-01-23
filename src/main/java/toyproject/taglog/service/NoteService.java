@@ -1,6 +1,5 @@
 package toyproject.taglog.service;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -11,15 +10,13 @@ import toyproject.taglog.dto.NoteDTO;
 import toyproject.taglog.dto.TagDTO;
 import toyproject.taglog.entity.*;
 import toyproject.taglog.exception.invalid.InvalidateNoteException;
-import toyproject.taglog.repository.CategoryRepository;
 import toyproject.taglog.repository.NoteRepository;
+import toyproject.taglog.repository.condition.NoteSearchCondition;
+import toyproject.taglog.repository.querydsl.NoteDSLRepository;
 
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static toyproject.taglog.entity.QNote.note;
 
 @Service
 @RequiredArgsConstructor
@@ -31,20 +28,13 @@ public class NoteService {
     private final CategoryService categoryService;
     private final UserService userService;
     private final NoteRepository noteRepository;
-    private final CategoryRepository categoryRepository;
-    private final EntityManager em;
+    private final NoteDSLRepository noteDSLRepository;
 
     public Slice<NoteDTO> findAllNoteByUserId(Long userId, Pageable pageable) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-
-        List<Note> results = queryFactory
-                .selectFrom(note)
-                .where(note.user.id.eq(userId), note.delYn.eq("N"))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        long listSize = noteRepository.countByUserId(userId);
+        NoteSearchCondition condition = new NoteSearchCondition();
+        condition.setUserId(userId);
+        List<Note> results = noteDSLRepository.findNotesWithCondition(condition, pageable);
+        long listSize = noteDSLRepository.countNotesWithCondition(condition);
 
         List<NoteDTO> returnDTO = new ArrayList<>();
 
@@ -55,22 +45,16 @@ public class NoteService {
             noteDTO.setTags(tagDTOList);
             returnDTO.add(noteDTO);
         }
-
         return new PageImpl<>(returnDTO, pageable, listSize);
     }
 
     public Slice<NoteDTO> findNoteByCategory(Long userId, Long categoryId, Pageable pageable) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        NoteSearchCondition condition = new NoteSearchCondition();
+        condition.setUserId(userId);
+        condition.setCategoryId(categoryId);
 
-        List<Note> results = queryFactory
-                .selectFrom(note)
-                .where(note.user.id.eq(userId), note.delYn.eq("N")
-                        , note.category.id.eq(categoryId))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        long listSize = noteRepository.countByUserIdAndCategoryId(userId, categoryId);
+        List<Note> results = noteDSLRepository.findNotesWithCondition(condition, pageable);
+        long listSize = noteDSLRepository.countNotesWithCondition(condition);
 
         List<NoteDTO> returnDTO = new ArrayList<>();
 
@@ -132,10 +116,8 @@ public class NoteService {
 
     @Transactional
     public NoteDTO updateNote(Note updateNote, Long noteId, Long userId, Long categoryId, List<Tag> tags) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-
         //원본 노트를 가져와서 request내용으로 변경 작업
-        Note orgNote = noteRepository.getNoteById(noteId).orElseThrow(InvalidateNoteException::new);
+        Note orgNote = noteRepository.findNoteById(noteId).orElseThrow(InvalidateNoteException::new);
         Category newCategory = categoryService.findCategoryById(categoryId);
 
         if (!orgNote.getCategory().equals(newCategory)) {
@@ -149,11 +131,7 @@ public class NoteService {
         noteTagService.deleteNoteTag(noteId);
 
         //bulk delete라 재조회
-        Note note = queryFactory
-                .selectFrom(QNote.note)
-                .join(QNote.note.user).fetchJoin()
-                .where(QNote.note.id.eq(noteId))
-                .fetchOne();
+        Note note = noteRepository.findNoteAndUserById(noteId);
 
         //신규 태그인 경우 추가
         List<Tag> tagList = tagService.addTag(note, tags);

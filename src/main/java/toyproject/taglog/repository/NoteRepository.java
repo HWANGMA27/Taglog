@@ -12,13 +12,12 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
 
     Optional<Note> findByIdAndDelYn(@Param("id") Long noteId, @Param("delYn") String delYN);
 
-    long countByUserId(Long userId);
-
     Optional<Note> findByIdAndUserIdAndDelYn(@Param("id") Long noteId, @Param("userId") Long userId, @Param("delYn") String delYN);
 
-    long countByUserIdAndCategoryId(Long userId, Long categoryId);
+    Optional<Note> findNoteById(Long noteId);
 
-    Optional<Note> getNoteById(Long noteId);
+    @Query("select N from Note N join fetch N.user U where N.id = :id and N.delYn = 'N' ")
+    Note findNoteAndUserById(@Param("id") Long noteId);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update Note N set N.delYn = 'Y', N.category.id = null where N.category.id = :categoryId")
