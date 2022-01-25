@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
+import toyproject.taglog.apiutills.ApiResult;
+import toyproject.taglog.apiutills.ApiUtils;
 import toyproject.taglog.dto.CategoryDTO;
 import toyproject.taglog.dto.NoteDTO;
 import toyproject.taglog.entity.Category;
@@ -29,33 +31,33 @@ public class CategoryController {
 
     @Operation(summary = "카테고리 전체 조회", description = "회원 Id로 카테고리를 조회합니다.")
     @GetMapping("/{id}")
-    public List<CategoryDTO> findCategory(@Parameter(description = "회원 Id", in = ParameterIn.PATH) @PathVariable("id") Long userId){
-        return convertToDTO(categoryService.findCategoryByUserId(userId));
+    public ApiResult<List<CategoryDTO>> findCategory(@Parameter(description = "회원 Id", in = ParameterIn.PATH) @PathVariable("id") Long userId){
+        return ApiUtils.success(convertToDTO(categoryService.findCategoryByUserId(userId)));
     }
 
     @Operation(summary = "카테고리에 해당되는 노트 조회", description = "회원 Id와 카테고리 Id로 노트를 조회합니다.")
     @GetMapping("/{category_id}/user/{id}")
-    public Slice<NoteDTO> findNoteByCategory(@Parameter(description = "카테고리 Id", in = ParameterIn.PATH) @PathVariable("category_id") Long categoryId,
+    public ApiResult<Slice<NoteDTO>> findNoteByCategory(@Parameter(description = "카테고리 Id", in = ParameterIn.PATH) @PathVariable("category_id") Long categoryId,
                                              @Parameter(description = "회원 Id", in = ParameterIn.PATH) @PathVariable("id") Long userId, Pageable pageable){
-        return noteService.findNoteByCategory(userId, categoryId, pageable);
+        return ApiUtils.success(noteService.findNoteByCategory(userId, categoryId, pageable));
     }
 
     @Operation(summary = "카테고리 추가", description = "신규 카테고리 추가합니다.")
     @PostMapping
-    public List<CategoryDTO> addCategory(@RequestBody CategoryDTO categoryDTO){
-        return convertToDTO(categoryService.addCategory(categoryDTO));
+    public ApiResult<List<CategoryDTO>> addCategory(@RequestBody CategoryDTO categoryDTO){
+        return ApiUtils.success(convertToDTO(categoryService.addCategory(categoryDTO)));
     }
 
     @Operation(summary = "카테고리 업데이트", description = "카테고리 순서, 제목을 업데이트합니다.")
     @PatchMapping
-    public List<CategoryDTO> updateCategory(@RequestBody @Valid CategoryDTO categoryDTO){
-        return convertToDTO(categoryService.updateCategory(categoryDTO));
+    public ApiResult<List<CategoryDTO>> updateCategory(@RequestBody @Valid CategoryDTO categoryDTO){
+        return ApiUtils.success(convertToDTO(categoryService.updateCategory(categoryDTO)));
     }
 
     @Operation(summary = "카테고리 삭제", description = "카테고리를 삭제합니다.")
     @DeleteMapping
-    public List<CategoryDTO> deleteCategory(@RequestBody @Valid CategoryDTO categoryDTO){
-        return convertToDTO(categoryService.deleteCategory(categoryDTO.getUserId(), categoryDTO.getCategoryId()));
+    public ApiResult<List<CategoryDTO>> deleteCategory(@RequestBody @Valid CategoryDTO categoryDTO){
+        return ApiUtils.success(convertToDTO(categoryService.deleteCategory(categoryDTO.getUserId(), categoryDTO.getCategoryId())));
     }
 
     /**

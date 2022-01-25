@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import toyproject.taglog.apiutills.ApiResult;
+import toyproject.taglog.apiutills.ApiUtils;
 import toyproject.taglog.dto.UserDTO;
 import toyproject.taglog.service.UserService;
 
@@ -15,12 +17,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 @ApiOperation(value = "User API")
-public class UserContoroller {
+public class UserController {
 
     private final UserService userService;
     @Operation(summary = "유저 전체 조회", description = "전체 유저를 조회합니다.")
     @GetMapping("/all")
-    public List<UserDTO> findAllUser(){
-        return userService.findAllUser();
+    public ApiResult<List<UserDTO>> findAllUser(){
+        return ApiUtils.success(userService.findAllUser());
     }
 }
