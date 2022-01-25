@@ -22,6 +22,6 @@ public interface NoteTagRepository extends JpaRepository<NoteTag, Long> {
     List<NoteTag> findNoteTagByUserId(@Param("userId") Long userId);
 
     @Query("select N from NoteTag NT join NT.note N " +
-            "where NT.user.id = :userId and NT.tag.id = :tagId")
+            "where NT.user.id = :userId and NT.tag.id = :tagId and N.delYn = 'N'")
     List<Note> findNoteTagByUserIdAndTagId(@Param("userId") Long userId, @Param("tagId") Long tagId);
 }
