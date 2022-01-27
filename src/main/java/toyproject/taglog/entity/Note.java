@@ -1,6 +1,7 @@
 package toyproject.taglog.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import toyproject.taglog.entity.base.BaseEntity;
@@ -36,6 +37,7 @@ public class Note extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Builder
     public Note(String title, String contents) {
         this.title = title;
         this.contents = contents;

@@ -48,10 +48,15 @@ public class NoteController {
     @Operation(summary = "새노트 추가", description = "새로운 노트를 추가합니다.")
     @PostMapping
     public ApiResult<NoteDTO> addNote(@RequestBody @Valid AddNoteRequest request){
-        Note note = new Note(request.getTitle(), request.getContents());
+        Note note = Note.builder()
+                        .title(request.getTitle())
+                        .contents(request.getContents())
+                        .build();
         List<Tag> tags = request.getTags()
                 .stream()
-                .map(tagDTO -> new Tag(tagDTO.getName()))
+                .map(tagDTO -> Tag.builder()
+                                .name(tagDTO.getName())
+                                .build())
                 .collect(Collectors.toList());
         return ApiUtils.success(noteService.addNote(note, request.getUserId(), request.getCategoryId(), tags));
     }
@@ -62,7 +67,9 @@ public class NoteController {
         Note note = new Note(noteDTO.getTitle(), noteDTO.getContents());
         List<Tag> tags = noteDTO.getTags()
                 .stream()
-                .map(tagDTO -> new Tag(tagDTO.getName()))
+                .map(tagDTO -> Tag.builder()
+                                .name(tagDTO.getName())
+                                .build())
                 .collect(Collectors.toList());
         return ApiUtils.success(noteService.updateNote(note, noteDTO.getNoteId(), noteDTO.getUserId(), noteDTO.getCategoryId(), tags));
     }

@@ -101,7 +101,10 @@ public class NoteService {
         //DTO로 변환해서 반환
         NoteDTO noteDTO = new NoteDTO(note);
         noteDTO.setTags(tags.stream()
-                .map(tag -> new TagDTO(tag.getId(), tag.getName()))
+                .map(tag -> TagDTO.builder()
+                                .id(tag.getId())
+                                .name(tag.getName())
+                                .build())
                 .collect(Collectors.toList()));
         return noteDTO;
     }
@@ -137,7 +140,10 @@ public class NoteService {
         List<Tag> tagList = tagService.addTag(note, tags);
         NoteDTO noteDTO = new NoteDTO(note);
         noteDTO.setTags(tagList.stream()
-                .map(tag -> new TagDTO(tag.getId(), tag.getName()))
+                .map(tag -> TagDTO.builder()
+                                .id(tag.getId())
+                                .name(tag.getName())
+                                .build())
                 .collect(Collectors.toList()));
         return noteDTO;
     }
@@ -158,7 +164,10 @@ public class NoteService {
             NoteDTO noteDTO = new NoteDTO(note);
             List<Tag> tags = tagService.findTagByNoteId(note.getId());
             noteDTO.setTags(tags.stream()
-                    .map(tag -> new TagDTO(tag.getId(), tag.getName()))
+                    .map(tag -> TagDTO.builder()
+                                    .id(tag.getId())
+                                    .name(tag.getName())
+                                    .build())
                     .collect(Collectors.toList()));
             noteDTOS.add(noteDTO);
         }
