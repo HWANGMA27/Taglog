@@ -1,6 +1,7 @@
 package toyproject.taglog.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ public class Tag {
     @Column(name = "tag_name")
     private String name;
 
+    @Builder
     public Tag(String name) {
         this.name = name;
     }

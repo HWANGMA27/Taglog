@@ -37,7 +37,10 @@ public class TagController {
         List<NoteTag> noteTagList = noteTagService.findNoteTagByUserId(userId);
         return ApiUtils.success(noteTagList.stream()
                 .map(NoteTag::getTag)
-                .map(tag -> new TagDTO(tag.getId(), tag.getName()))
+                .map(tag -> TagDTO.builder()
+                                .id(tag.getId())
+                                .name(tag.getName())
+                                .build())
                 .distinct()
                 .collect(Collectors.toList()));
     }
