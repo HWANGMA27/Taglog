@@ -7,6 +7,7 @@ import toyproject.taglog.dto.CategoryDTO;
 import toyproject.taglog.entity.Category;
 import toyproject.taglog.entity.User;
 import toyproject.taglog.exception.invalid.InvalidateCategoryException;
+import toyproject.taglog.exception.invalid.InvalidateUserException;
 import toyproject.taglog.repository.CategoryRepository;
 import toyproject.taglog.repository.NoteRepository;
 import toyproject.taglog.repository.UserRepository;
@@ -55,7 +56,7 @@ public class CategoryService {
 
     @Transactional
     public List<Category> addCategory(CategoryDTO categoryDTO) {
-        User user = userRepository.findById(categoryDTO.getUserId()).get();
+        User user = userRepository.findById(categoryDTO.getUserId()).orElseThrow(InvalidateUserException::new);
         List<Category> reOrderList =  findCategoryGoeOrder(categoryDTO.getUserId(), 1);
         addOrderCategories(reOrderList);
 

@@ -1,12 +1,11 @@
 package toyproject.taglog.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,6 +29,7 @@ public class Category {
 //    @OneToMany(mappedBy = "category")
 //    private List<Note> note = new ArrayList<>();
 
+    @Builder
     public Category(String name, int order, User user) {
         this.name = name;
         this.order = order;

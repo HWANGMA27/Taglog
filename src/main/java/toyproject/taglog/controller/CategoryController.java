@@ -65,7 +65,13 @@ public class CategoryController {
      */
     private List<CategoryDTO> convertToDTO(List<Category> categories){
         return categories.stream()
-                    .map(category -> new CategoryDTO(category.getId(), category.getName(), category.getOrder(), category.getUser().getId()))
+                    .map(category -> CategoryDTO.builder()
+                                        .categoryId(category.getId())
+                                        .name(category.getName())
+                                        .order(category.getOrder())
+                                        .userId(category.getUser().getId())
+                                        .build()
+                    )
                     .collect(Collectors.toList());
 
     }
