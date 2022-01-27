@@ -19,7 +19,11 @@ public class NoteTagService {
 
     @Transactional
     public void addNoteTage(Note note, Tag tag) {
-        NoteTag noteTag = new NoteTag(note, tag, note.getUser());
+        NoteTag noteTag = NoteTag.builder()
+                                .note(note)
+                                .tag(tag)
+                                .user(note.getUser())
+                                .build();
         noteTagRepository.save(noteTag);
     }
 

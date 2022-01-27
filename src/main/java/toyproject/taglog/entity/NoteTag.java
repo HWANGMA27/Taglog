@@ -1,6 +1,7 @@
 package toyproject.taglog.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +28,7 @@ public class NoteTag {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Builder
     public NoteTag(Note note, Tag tag, User user) {
         this.note = note;
         this.tag = tag;
