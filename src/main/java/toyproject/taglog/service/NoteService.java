@@ -113,7 +113,6 @@ public class NoteService {
     public void deleteNote(Long userId, Long noteId) {
         Note findNote = noteRepository.findByIdAndUserIdAndDelYn(noteId, userId, "N").orElseThrow(InvalidateNoteException::new);
         findNote.updateNoteStatus("Y");
-        noteRepository.save(findNote);
         noteTagService.deleteNoteTag(noteId);
     }
 
@@ -128,7 +127,6 @@ public class NoteService {
         }
 
         orgNote.updateContents(updateNote.getTitle(), updateNote.getContents());
-        noteRepository.save(orgNote);
 
         //노트 태그 테이블에 노트id 전체 삭제
         noteTagService.deleteNoteTag(noteId);
@@ -153,7 +151,6 @@ public class NoteService {
         Note findNote = noteRepository.findByIdAndDelYn(noteId, "N").orElseThrow(InvalidateNoteException::new);
         Category findCategory = categoryService.findCategoryById(categoryId);
         findNote.updateCategory(findCategory);
-        noteRepository.save(findNote);
      }
 
     public List<NoteDTO> findNoteByTag(Long userId, Long tagId) {
