@@ -28,7 +28,7 @@ public class CategoryService {
     private final NoteRepository noteRepository;
 
     public List<Category> findCategoryByUserId(Long userId){
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId).orElseThrow(InvalidateUserException::new);
         return categoryRepository.findByUser(user);
     }
 
