@@ -74,14 +74,12 @@ public class CategoryService {
     private void addOrderCategories(List<Category> categories){
         for (Category category : categories) {
             category.reOrderCategory(category.getOrder()+1);
-            categoryRepository.save(category);
         }
     }
 
     private void minusOrderCategories(List<Category> categories){
         for (Category category : categories) {
             category.reOrderCategory(category.getOrder()-1);
-            categoryRepository.save(category);
         }
     }
 
