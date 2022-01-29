@@ -84,7 +84,11 @@ JavaScript, TypeScript, SpringBoot, Java, JPA project
 [Swagger UI](http://ec2-54-180-22-149.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html)
 
 ## DB
-![taglog_erd](https://user-images.githubusercontent.com/79449735/150506579-e6c4392e-f75c-4775-8295-80c25d25ff06.png)
+1차 개발
+![태그로그2](https://user-images.githubusercontent.com/79449735/151661138-23093a32-1f8b-4dc8-8a69-50970d40177a.png)
+
+2차 개발
+![seorim](https://user-images.githubusercontent.com/79449735/151661140-14dcb3e2-9d2e-42c7-b5bc-16b8b3f1d9f0.png)
 
  
 ## Notion 
