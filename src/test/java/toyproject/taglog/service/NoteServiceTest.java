@@ -62,8 +62,8 @@ class NoteServiceTest {
         note.updateUser(user);
         noteRepository.save(note);
 
-        NoteTag noteTag = new NoteTag(note, tag, user);
-        NoteTag noteTag2 = new NoteTag(note, tag2, user);
+        NoteTag noteTag = new NoteTag(note, tag);
+        NoteTag noteTag2 = new NoteTag(note, tag2);
         noteTagRepository.save(noteTag);
         noteTagRepository.save(noteTag2);
 
@@ -165,7 +165,7 @@ class NoteServiceTest {
         note.updateUser(user);
         noteRepository.save(note);
 
-        NoteTag noteTag = new NoteTag(note, newTag, user);
+        NoteTag noteTag = new NoteTag(note, newTag);
         noteTagRepository.save(noteTag);
 
         em.flush();

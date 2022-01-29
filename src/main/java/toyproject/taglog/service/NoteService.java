@@ -154,7 +154,7 @@ public class NoteService {
      }
 
     public List<NoteDTO> findNoteByTag(Long userId, Long tagId) {
-        List<Note> notes = noteTagService.findNoteTagByUserIdAndTagId(userId, tagId);
+        List<Note> notes = findNoteByUserIdAndTagId(userId, tagId);
         List<NoteDTO> noteDTOS = new ArrayList<>();
 
         for (Note note : notes) {
@@ -170,6 +170,10 @@ public class NoteService {
         }
 
         return noteDTOS;
+    }
+
+    public List<Note> findNoteByUserIdAndTagId(Long userId, Long tagId) {
+        return noteDSLRepository.findNoteByUserIdAndTagId(userId, tagId);
     }
 
     public void bulkDeleteNoteByCategoryId(Long categoryId) {

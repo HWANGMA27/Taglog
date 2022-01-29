@@ -56,8 +56,8 @@ class NoteRepositoryTest {
         note.updateUser(user);
         noteRepository.save(note);
 
-        NoteTag noteTag = new NoteTag(note, tag, user);
-        NoteTag noteTag2 = new NoteTag(note, tag2, user);
+        NoteTag noteTag = new NoteTag(note, tag);
+        NoteTag noteTag2 = new NoteTag(note, tag2);
         noteTagRepository.save(noteTag);
         noteTagRepository.save(noteTag2);
 

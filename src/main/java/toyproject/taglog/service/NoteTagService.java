@@ -7,6 +7,7 @@ import toyproject.taglog.entity.Note;
 import toyproject.taglog.entity.NoteTag;
 import toyproject.taglog.entity.Tag;
 import toyproject.taglog.repository.NoteTagRepository;
+import toyproject.taglog.repository.querydsl.TagDSLRepository;
 
 import java.util.List;
 
@@ -16,13 +17,13 @@ import java.util.List;
 public class NoteTagService {
 
     private final NoteTagRepository noteTagRepository;
+    private final TagDSLRepository noteTagDSLRepository;
 
     @Transactional
     public void addNoteTage(Note note, Tag tag) {
         NoteTag noteTag = NoteTag.builder()
                                 .note(note)
                                 .tag(tag)
-                                .user(note.getUser())
                                 .build();
         noteTagRepository.save(noteTag);
     }
@@ -34,13 +35,5 @@ public class NoteTagService {
 
     public List<NoteTag> findNoteTagByNoteId (Long noteId){
         return noteTagRepository.findNoteTagByNoteId(noteId);
-    }
-
-    public List<NoteTag> findNoteTagByUserId(Long userId) {
-        return noteTagRepository.findNoteTagByUserId(userId);
-    }
-
-    public List<Note> findNoteTagByUserIdAndTagId(Long userId, Long tagId) {
-        return noteTagRepository.findNoteTagByUserIdAndTagId(userId, tagId);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import toyproject.taglog.entity.*;
+import toyproject.taglog.repository.querydsl.TagDSLRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 @Transactional
 class NoteTagRepositoryTest {
 
+    @Autowired
+    TagDSLRepository tagDSLRepository;
     @Autowired
     NoteTagRepository noteTagRepository;
     @Autowired
@@ -55,8 +58,8 @@ class NoteTagRepositoryTest {
         note.updateUser(user);
         noteRepository.save(note);
 
-        NoteTag noteTag = new NoteTag(note, tag, user);
-        NoteTag noteTag2 = new NoteTag(note, tag2, user);
+        NoteTag noteTag = new NoteTag(note, tag);
+        NoteTag noteTag2 = new NoteTag(note, tag2);
         noteTagRepository.save(noteTag);
         noteTagRepository.save(noteTag2);
 
@@ -65,9 +68,9 @@ class NoteTagRepositoryTest {
 
     }
 
-    @DisplayName("유저 아이디로 noteTag & tag select 테스트")
+    @DisplayName("유저 아이디로 tag select 테스트")
     @Test
-    public void findNoteTagByUserIdTest() throws Exception{
+    public void findNoteByUserIdTest() throws Exception{
         //
         note = new Note("타이틀2", "컨텐츠2");
         note.updateCategory(category);
@@ -75,8 +78,8 @@ class NoteTagRepositoryTest {
         note.updateUser(user);
         noteRepository.save(note);
 
-        NoteTag noteTag = new NoteTag(note, tag, user);
-        NoteTag noteTag2 = new NoteTag(note, tag2, user);
+        NoteTag noteTag = new NoteTag(note, tag);
+        NoteTag noteTag2 = new NoteTag(note, tag2);
         noteTagRepository.save(noteTag);
         noteTagRepository.save(noteTag2);
 
@@ -84,11 +87,11 @@ class NoteTagRepositoryTest {
         em.clear();
 
         //when
-        List<NoteTag> noteTagByUserId = noteTagRepository.findNoteTagByUserId(user.getId());
-        List<Tag> tags = noteTagByUserId.stream()
-                .map(NoteTag::getTag).distinct().collect(Collectors.toList());
+        List<Tag> tags = tagDSLRepository.findTagByUserId(user.getId())
+                .stream()
+                .distinct()
+                .collect(Collectors.toList());
         //then
-        Assertions.assertThat(noteTagByUserId.size()).isEqualTo(4);
         Assertions.assertThat(tags.size()).isEqualTo(2);
 
     }

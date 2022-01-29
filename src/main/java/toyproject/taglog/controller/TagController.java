@@ -13,7 +13,6 @@ import toyproject.taglog.apiutills.ApiResult;
 import toyproject.taglog.apiutills.ApiUtils;
 import toyproject.taglog.dto.NoteDTO;
 import toyproject.taglog.dto.TagDTO;
-import toyproject.taglog.entity.NoteTag;
 import toyproject.taglog.service.NoteService;
 import toyproject.taglog.service.NoteTagService;
 import toyproject.taglog.service.TagService;
@@ -34,9 +33,8 @@ public class TagController {
     @Operation(summary = "태그 전체 조회", description = "회원 Id로 태그를 전체 조회합니다.")
     @GetMapping("/all/{id}")
     public ApiResult<List<TagDTO>> findAllTag(@Parameter(description = "회원 Id", in = ParameterIn.PATH) @PathVariable("id") Long userId){
-        List<NoteTag> noteTagList = noteTagService.findNoteTagByUserId(userId);
-        return ApiUtils.success(noteTagList.stream()
-                .map(NoteTag::getTag)
+        return ApiUtils.success(tagService.findTagByUserId(userId)
+                .stream()
                 .map(tag -> TagDTO.builder()
                                 .id(tag.getId())
                                 .name(tag.getName())

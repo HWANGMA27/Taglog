@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import toyproject.taglog.entity.Note;
 import toyproject.taglog.entity.Tag;
 import toyproject.taglog.repository.TagRepository;
+import toyproject.taglog.repository.querydsl.TagDSLRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class TagService {
 
     private final TagRepository tagRepository;
+    private final TagDSLRepository tagDSLRepository;
     private final NoteTagService noteTagService;
 
     @Transactional
@@ -41,5 +43,10 @@ public class TagService {
 
     public List<Tag> findTagByNoteId(Long noteId) {
         return tagRepository.findTagByNoteId(noteId);
+    }
+
+
+    public List<Tag> findTagByUserId(Long userId) {
+        return tagDSLRepository.findTagByUserId(userId);
     }
 }
