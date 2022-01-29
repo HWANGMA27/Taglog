@@ -24,14 +24,9 @@ public class NoteTag {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @Builder
-    public NoteTag(Note note, Tag tag, User user) {
+    public NoteTag(Note note, Tag tag) {
         this.note = note;
         this.tag = tag;
-        this.user = user;
     }
 }
