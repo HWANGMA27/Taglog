@@ -13,6 +13,8 @@ import java.util.List;
 
 import static toyproject.taglog.entity.QCategory.category;
 import static toyproject.taglog.entity.QNote.note;
+import static toyproject.taglog.entity.QNoteTag.noteTag;
+import static toyproject.taglog.entity.QTag.tag;
 import static toyproject.taglog.entity.QUser.user;
 
 @Repository
@@ -45,6 +47,16 @@ public class NoteDSLRepository {
                         delYnEq(condition.getDelYN())
                 )
                 .fetch().get(0);
+    }
+
+    public List<Note> findNoteByUserIdAndTagId(Long userId, Long tagId) {
+        return queryFactory
+                .select(note)
+                .from(noteTag)
+                .join(noteTag.tag, tag)
+                .join(noteTag.note, note)
+                .where(note.user.id.eq(userId), tag.id.eq(tagId), note.delYn.eq("N"))
+                .fetch();
     }
 
     private BooleanExpression delYnEq(String delYN) {
