@@ -8,11 +8,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toyproject.taglog.dto.NoteDTO;
 import toyproject.taglog.dto.TagDTO;
-import toyproject.taglog.entity.*;
-import toyproject.taglog.exception.invalid.InvalidateNoteException;
+import toyproject.taglog.entity.Category;
+import toyproject.taglog.entity.Note;
+import toyproject.taglog.entity.Tag;
+import toyproject.taglog.entity.User;
 import toyproject.taglog.repository.NoteRepository;
+import toyproject.taglog.repository.NoteTagRepository;
 import toyproject.taglog.repository.condition.NoteSearchCondition;
 import toyproject.taglog.repository.querydsl.NoteDSLRepository;
+import toyproject.taglog.repository.querydsl.TagDSLRepository;
+import toyproject.taglog.service.common.ValidateService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +29,11 @@ import java.util.stream.Collectors;
 public class NoteService {
 
     private final TagService tagService;
-    private final NoteTagService noteTagService;
-    private final CategoryService categoryService;
-    private final UserService userService;
+    private final NoteTagRepository noteTagRepository;
+    private final ValidateService validateService;
     private final NoteRepository noteRepository;
     private final NoteDSLRepository noteDSLRepository;
+    private final TagDSLRepository tagDSLRepository;
 
     public Slice<NoteDTO> findAllNoteByUserId(Long userId, Pageable pageable) {
         NoteSearchCondition condition = new NoteSearchCondition();
@@ -70,34 +75,28 @@ public class NoteService {
     }
 
     private List<TagDTO> findTagByNote(Note note) {
-        List<NoteTag> noteTag = noteTagService.findNoteTagByNoteId(note.getId());
-        List<Tag> tags = noteTag
-                .stream()
-                .map(NoteTag::getTag)
-                .collect(Collectors.toList());
-        List<TagDTO> tagDTOList = tags
+        return tagDSLRepository.findTagByNoteId(note.getId())
                 .stream()
                 .map(tag -> new TagDTO(tag.getId(), tag.getName()))
                 .collect(Collectors.toList());
-        return tagDTOList;
     }
 
     public NoteDTO findNoteByIdAndDelYn(Long noteId, String delYn) {
-        Note findNote = noteRepository.findByIdAndDelYn(noteId, delYn).orElseThrow(InvalidateNoteException::new);
+        Note findNote = validateService.validateNote(noteId, delYn);
         return new NoteDTO(findNote);
     }
-
     @Transactional
     public NoteDTO addNote(Note note, Long userId, Long categoryId, List<Tag> tagList) {
         //노트 추가
-        User user = userService.findUserByid(userId);
-        Category category = categoryService.findCategoryById(categoryId);
+        User user = validateService.validateUser(userId);
+        Category category = validateService.validateCategory(categoryId);
         note.updateUser(user);
         note.updateCategory(category);
         noteRepository.save(note);
 
         //태그 추가
         List<Tag> tags = tagService.addTag(note, tagList);
+
         //DTO로 변환해서 반환
         NoteDTO noteDTO = new NoteDTO(note);
         noteDTO.setTags(tags.stream()
@@ -111,16 +110,16 @@ public class NoteService {
 
     @Transactional
     public void deleteNote(Long userId, Long noteId) {
-        Note findNote = noteRepository.findByIdAndUserIdAndDelYn(noteId, userId, "N").orElseThrow(InvalidateNoteException::new);
+        Note findNote = validateService.validateNote(noteId, "N");
         findNote.updateNoteStatus("Y");
-        noteTagService.deleteNoteTag(noteId);
+        noteTagRepository.bulkDelete(noteId);
     }
 
     @Transactional
     public NoteDTO updateNote(Note updateNote, Long noteId, Long userId, Long categoryId, List<Tag> tags) {
         //원본 노트를 가져와서 request내용으로 변경 작업
-        Note orgNote = noteRepository.findNoteById(noteId).orElseThrow(InvalidateNoteException::new);
-        Category newCategory = categoryService.findCategoryById(categoryId);
+        Note orgNote = validateService.validateNote(noteId, "N");
+        Category newCategory = validateService.validateCategory(categoryId);
 
         if (!orgNote.getCategory().equals(newCategory)) {
             orgNote.updateCategory(newCategory);
@@ -129,7 +128,7 @@ public class NoteService {
         orgNote.updateContents(updateNote.getTitle(), updateNote.getContents());
 
         //노트 태그 테이블에 노트id 전체 삭제
-        noteTagService.deleteNoteTag(noteId);
+        noteTagRepository.bulkDelete(noteId);
 
         //bulk delete라 재조회
         Note note = noteRepository.findNoteAndUserById(noteId);
@@ -148,8 +147,8 @@ public class NoteService {
 
     @Transactional
     public void updateNoteCategory(Long noteId, Long categoryId) {
-        Note findNote = noteRepository.findByIdAndDelYn(noteId, "N").orElseThrow(InvalidateNoteException::new);
-        Category findCategory = categoryService.findCategoryById(categoryId);
+        Note findNote = validateService.validateNote(noteId, "N");
+        Category findCategory = validateService.validateCategory(categoryId);
         findNote.updateCategory(findCategory);
      }
 

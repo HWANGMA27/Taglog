@@ -26,4 +26,13 @@ public class TagDSLRepository {
                 .where(user.id.eq(userId))
                 .fetch();
     }
+
+    public List<Tag> findTagByNoteId(Long noteId) {
+        return queryFactory
+                .select(noteTag.tag)
+                .from(noteTag)
+                .join(noteTag.tag, tag)
+                .where(noteTag.note.id.eq(noteId))
+                .fetch();
+    }
 }

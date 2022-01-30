@@ -76,11 +76,11 @@ class NoteRepositoryTest {
         Assertions.assertThat(noteListSize).isEqualTo(1);
     }
 
-    @DisplayName("사용자의 특정 노트 찾기 테스트")
+    @DisplayName("Id로 노트 찾기 테스트")
     @Test
     public void findByIdAndUserIdTest() throws Exception{
         //when
-        Optional<Note> findNote = noteRepository.findByIdAndUserIdAndDelYn(note.getId(), user.getId(), "N");
+        Optional<Note> findNote = noteRepository.findByIdAndDelYn(note.getId(), "N");
         //then
         Assertions.assertThat(findNote.isEmpty()).isFalse();
         Note note = findNote.get();

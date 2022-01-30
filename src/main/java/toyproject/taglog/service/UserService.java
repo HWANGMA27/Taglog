@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toyproject.taglog.dto.UserDTO;
-import toyproject.taglog.entity.User;
-import toyproject.taglog.exception.invalid.InvalidateUserException;
 import toyproject.taglog.repository.UserRepository;
 
 import java.util.List;
@@ -17,10 +15,6 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-
-    public User findUserByid(Long userId) {
-        return userRepository.findById(userId).orElseThrow(InvalidateUserException::new);
-    }
 
     public List<UserDTO> findAllUser() {
         return userRepository.findAll()

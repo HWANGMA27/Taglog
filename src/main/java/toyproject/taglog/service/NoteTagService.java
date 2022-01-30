@@ -28,11 +28,6 @@ public class NoteTagService {
         noteTagRepository.save(noteTag);
     }
 
-    @Transactional
-    public void deleteNoteTag(Long noteId) {
-        noteTagRepository.bulkDelete(noteId);
-    }
-
     public List<NoteTag> findNoteTagByNoteId (Long noteId){
         return noteTagRepository.findNoteTagByNoteId(noteId);
     }

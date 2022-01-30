@@ -10,8 +10,6 @@ import java.util.Optional;
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
-    List<Tag> findTagById(Long id);
-
     Optional<Tag> findTagByName(String name);
 
     @Query("select T from NoteTag N join N.tag T where N.note.id = :noteId")

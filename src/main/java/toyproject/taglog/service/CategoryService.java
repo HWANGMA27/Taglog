@@ -6,13 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import toyproject.taglog.dto.CategoryDTO;
 import toyproject.taglog.entity.Category;
 import toyproject.taglog.entity.User;
-import toyproject.taglog.exception.invalid.InvalidateCategoryException;
-import toyproject.taglog.exception.invalid.InvalidateUserException;
 import toyproject.taglog.repository.CategoryRepository;
 import toyproject.taglog.repository.NoteRepository;
-import toyproject.taglog.repository.UserRepository;
 import toyproject.taglog.repository.condition.CategorySearchCondition;
 import toyproject.taglog.repository.querydsl.CategoryDSLRepository;
+import toyproject.taglog.service.common.ValidateService;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -24,20 +22,20 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryDSLRepository categoryDSLRepository;
-    private final UserRepository userRepository;
     private final NoteRepository noteRepository;
+    private final ValidateService validateService;
 
     public List<Category> findCategoryByUserId(Long userId){
-        User user = userRepository.findById(userId).orElseThrow(InvalidateUserException::new);
+        User user = validateService.validateUser(userId);
         return categoryRepository.findByUser(user);
     }
 
     @Transactional
     public List<Category> updateCategory(CategoryDTO categoryDTO){
-        Category category = categoryRepository.getByUserIdAndId(categoryDTO.getUserId(), categoryDTO.getCategoryId())
-                .orElseThrow(InvalidateCategoryException::new);
+        Long categoryId = categoryDTO.getCategoryId();
+        Category category = validateService.validateCategory(categoryId);
         int order = categoryDTO.getOrder();
-        List<Category> reOrderList = findCategoryGoeOrder(categoryDTO.getUserId(), order);
+        List<Category> reOrderList = findCategoryGoeOrder(categoryId, order);
         addOrderCategories(reOrderList);
         category.updateCategory(categoryDTO.getName(), order);
         return findCategoryByUserId(categoryDTO.getUserId());
@@ -46,17 +44,17 @@ public class CategoryService {
     @Transactional
     public List<Category> deleteCategory(Long userId, Long categoryId) {
         noteRepository.bulkDeleteNoteByCategoryId(categoryId);
-        Category category = categoryRepository.getByUserIdAndId(userId, categoryId)
-                .orElseThrow(InvalidateCategoryException::new);
+        Category category = validateService.validateCategory(categoryId);
         List<Category> reOrderList = findCategoryGoeOrder(userId, category.getOrder());
         minusOrderCategories(reOrderList);
         categoryRepository.delete(category);
+        //노트 삭제 로직 추가
         return findCategoryByUserId(userId);
     }
 
     @Transactional
     public List<Category> addCategory(CategoryDTO categoryDTO) {
-        User user = userRepository.findById(categoryDTO.getUserId()).orElseThrow(InvalidateUserException::new);
+        User user = validateService.validateUser(categoryDTO.getUserId());
         List<Category> reOrderList =  findCategoryGoeOrder(categoryDTO.getUserId(), 1);
         addOrderCategories(reOrderList);
 
@@ -81,9 +79,5 @@ public class CategoryService {
         for (Category category : categories) {
             category.reOrderCategory(category.getOrder()-1);
         }
-    }
-
-    public Category findCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(InvalidateCategoryException::new);
     }
 }
