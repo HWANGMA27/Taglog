@@ -34,10 +34,17 @@ public class CategoryService {
     public List<Category> updateCategory(CategoryDTO categoryDTO){
         Long categoryId = categoryDTO.getCategoryId();
         Category category = validateService.validateCategory(categoryId);
-        int order = categoryDTO.getOrder();
-        List<Category> reOrderList = findCategoryGoeOrder(categoryId, order);
-        addOrderCategories(reOrderList);
-        category.updateCategory(categoryDTO.getName(), order);
+
+        int requestOrder = categoryDTO.getOrder();
+        if(requestOrder != category.getOrder()){
+            //order 변경
+            Long userId = categoryDTO.getUserId();
+            categoryDSLRepository.relocateOrder(userId, requestOrder, 1);
+            category.relocateCategory(requestOrder);
+        }else{
+            category.updateCategoryName(categoryDTO.getName());
+        }
+
         return findCategoryByUserId(categoryDTO.getUserId());
     }
 
@@ -45,8 +52,7 @@ public class CategoryService {
     public List<Category> deleteCategory(Long userId, Long categoryId) {
         noteRepository.bulkDeleteNoteByCategoryId(categoryId);
         Category category = validateService.validateCategory(categoryId);
-        List<Category> reOrderList = findCategoryGoeOrder(userId, category.getOrder());
-        minusOrderCategories(reOrderList);
+        categoryDSLRepository.relocateOrder(userId, 1, -1);
         categoryRepository.delete(category);
         //노트 삭제 로직 추가
         return findCategoryByUserId(userId);
@@ -54,9 +60,9 @@ public class CategoryService {
 
     @Transactional
     public List<Category> addCategory(CategoryDTO categoryDTO) {
-        User user = validateService.validateUser(categoryDTO.getUserId());
-        List<Category> reOrderList =  findCategoryGoeOrder(categoryDTO.getUserId(), 1);
-        addOrderCategories(reOrderList);
+        Long userId = categoryDTO.getUserId();
+        User user = validateService.validateUser(userId);
+        categoryDSLRepository.relocateOrder(userId, 1, 1);
 
         Category category = new Category(categoryDTO.getName(), 1, user);
         categoryRepository.save(category);
@@ -69,15 +75,15 @@ public class CategoryService {
         return categoryDSLRepository.findCategoryWithCondition(condition);
     }
 
-    private void addOrderCategories(List<Category> categories){
-        for (Category category : categories) {
-            category.reOrderCategory(category.getOrder()+1);
-        }
-    }
-
-    private void minusOrderCategories(List<Category> categories){
-        for (Category category : categories) {
-            category.reOrderCategory(category.getOrder()-1);
-        }
-    }
+//    private void addOrderCategories(List<Category> categories){
+//        for (Category category : categories) {
+//            category.relocateCategory(category.getOrder()+1);
+//        }
+//    }
+//
+//    private void minusOrderCategories(List<Category> categories){
+//        for (Category category : categories) {
+//            category.relocateCategory(category.getOrder()-1);
+//        }
+//    }
 }

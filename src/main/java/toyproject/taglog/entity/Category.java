@@ -41,12 +41,11 @@ public class Category {
         this.user = user;
     }
 
-    public void updateCategory(String name, int order){
+    public void updateCategoryName(String name){
         this.name = name;
-        this.order = order;
     }
 
-    public void reOrderCategory(int order){
+    public void relocateCategory(int order){
         this.order = order;
     }
 }

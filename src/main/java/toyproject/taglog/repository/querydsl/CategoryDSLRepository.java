@@ -3,6 +3,7 @@ package toyproject.taglog.repository.querydsl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import toyproject.taglog.entity.Category;
 import toyproject.taglog.repository.condition.CategorySearchCondition;
@@ -31,5 +32,14 @@ public class CategoryDSLRepository {
 
     private BooleanExpression userIdEq(Long userId) {
         return userId != null ? user.id.eq(userId) : null;
+    }
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    public void relocateOrder(Long userId, int offset, int locationVar) {
+        queryFactory.update(category)
+                .set(category.order, category.order.add(locationVar))
+                .where(category.order.goe(offset),
+                        category.user.id.eq(userId))
+                .execute();
     }
 }

@@ -7,8 +7,11 @@ import toyproject.taglog.entity.Category;
 import toyproject.taglog.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT c FROM Category c WHERE c.user = :user ORDER BY order")
     List<Category> findByUser(@Param("user") User user);
+
+    Optional<Category> findByName(String name);
 }
