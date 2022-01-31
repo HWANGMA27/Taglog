@@ -14,7 +14,6 @@ import toyproject.taglog.exception.invalid.InvalidateNoteException;
 import toyproject.taglog.exception.invalid.InvalidateUserException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.nio.file.AccessDeniedException;
 
 @Slf4j
 @RestControllerAdvice(annotations = RestController.class)
@@ -59,7 +58,7 @@ public class ApiExceptionAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidateUserException.class)
-    public ApiResult<ResponseEntity<ApiExceptionEntity>> exceptionHandler(HttpServletRequest request, final AccessDeniedException e) {
+    public ApiResult<ResponseEntity<ApiExceptionEntity>> userExceptionHandler(HttpServletRequest request, final RuntimeException e) {
         log.info(e.getMessage());
         return ApiUtils.error(ResponseEntity
                 .status(ExceptionEnum.INVALIDATE_USER.getStatus())

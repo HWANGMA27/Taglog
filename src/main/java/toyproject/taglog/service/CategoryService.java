@@ -50,6 +50,7 @@ public class CategoryService {
 
     @Transactional
     public List<Category> deleteCategory(Long userId, Long categoryId) {
+        validateService.validateUser(userId);
         noteRepository.bulkDeleteNoteByCategoryId(categoryId);
         Category category = validateService.validateCategory(categoryId);
         categoryDSLRepository.relocateOrder(userId, 1, -1);
@@ -74,16 +75,4 @@ public class CategoryService {
         condition.setUserId(userId);
         return categoryDSLRepository.findCategoryWithCondition(condition);
     }
-
-//    private void addOrderCategories(List<Category> categories){
-//        for (Category category : categories) {
-//            category.relocateCategory(category.getOrder()+1);
-//        }
-//    }
-//
-//    private void minusOrderCategories(List<Category> categories){
-//        for (Category category : categories) {
-//            category.relocateCategory(category.getOrder()-1);
-//        }
-//    }
 }
