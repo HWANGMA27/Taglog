@@ -1,7 +1,6 @@
 package toyproject.taglog.service.common;
 
 import lombok.RequiredArgsConstructor;
-import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toyproject.taglog.entity.Category;
@@ -16,11 +15,10 @@ import toyproject.taglog.repository.UserRepository;
 
 @RequiredArgsConstructor
 @Service
-@Aspect
 @Transactional(readOnly = true)
 public class ValidateService {
     private final NoteRepository noteRepository;
-    public final CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
     public Note validateNote(Long noteId, String delYn){
