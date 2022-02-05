@@ -76,6 +76,8 @@ class NoteRepositoryTest {
         Assertions.assertThat(noteListSize).isEqualTo(1);
     }
 
+
+
     @DisplayName("Id로 노트 찾기 테스트")
     @Test
     public void findByIdAndUserIdTest() throws Exception{
@@ -86,5 +88,32 @@ class NoteRepositoryTest {
         Note note = findNote.get();
         Assertions.assertThat(note.getTitle())
                 .isEqualTo("타이틀");
+    }
+
+    @DisplayName("노트 벌크 삭제 테스트")
+    @Test
+    public void bulkDeleteTest() throws  Exception{
+        //given
+        Category newCategory = new Category("테스트 카테고리", 2, user);
+        categoryRepository.save(newCategory);
+        for (int i = 0; i < 100; i++) {
+            Note newNote = new Note("타이틀", "컨텐츠");
+            newNote.updateCategory(newCategory);
+            newNote.updateNoteStatus("N");
+            newNote.updateUser(user);
+            noteRepository.save(newNote);
+        }
+        em.flush();
+        em.clear();
+
+        //when
+        noteRepository.bulkDeleteNoteByCategoryId(newCategory.getId());
+        long count = noteRepository.countNoteNotDeleted(newCategory.getId());
+        long otherCategoryCount = noteRepository.countNoteNotDeleted(category.getId());
+
+        //then
+        //다른 카테고리의 노트는 삭제되면 안된다
+        Assertions.assertThat(count).isEqualTo(0);
+        Assertions.assertThat(otherCategoryCount).isEqualTo(1);
     }
 }

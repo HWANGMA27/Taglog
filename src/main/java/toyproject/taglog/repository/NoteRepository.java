@@ -18,4 +18,7 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update Note N set N.delYn = 'Y', N.category.id = null where N.category.id = :categoryId")
     void bulkDeleteNoteByCategoryId(@Param("categoryId") Long categoryId);
+
+    @Query("select count(N) from Note N where N.category.id = :categoryId and N.delYn = 'N' ")
+    long countNoteNotDeleted(@Param("categoryId") Long categoryId);
 }
