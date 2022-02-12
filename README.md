@@ -1,7 +1,7 @@
 # Taglog
 > 태그를 활용한 웹노트 API 서버
 
-JavaScript, TypeScript, SpringBoot, Java, JPA project 
+SpringBoot, Java, JPA project, AWS EC2, AWS RDS, Travis CI
 
 작성한 콘텐츠를 검색 및 카테고리, 태그 sorting할 수 있는 서비스
 
@@ -69,7 +69,7 @@ JavaScript, TypeScript, SpringBoot, Java, JPA project
 | DB | AWS RDS MariaDB |
 | Server | AWS |
 | VC | Git/Github |
-| CI, CD | Jenkins |
+| CI, CD | Travis CI |
 | API 문서화 | SWAGGER |
 
 개발 툴
