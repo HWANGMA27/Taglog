@@ -23,13 +23,13 @@ notifications:
     on_failure: always # default: always
 
 before_deploy:
-  - zip -r talog #파일 압축
+  - zip -r taglog #파일 압축
   - mkdir -p deploy #travis가 설치된 위치에 배포 디렉토리 생성
   - mv taglog.zip deploy/taglog.zip
 deploy:
   - provider: s3
-    access_key_id: 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
-    secret_access_key: aH/cDn19WxfORY7CsWKcsiDlW/yggQoUrxbhnNV0
+    access_key_id: $AWS_ACCESS_KEY #Travis에 저장한 키 변수 사용
+    secret_access_key: $AWS_SECRET_KEY #Travis에 저장한 키 변수 사용
     bucket: taglog-build
     region: ap-northeast-2
     skip_cleanup: true
