@@ -29,8 +29,8 @@ before_deploy:
 deploy:
   - provider: s3
     access_key_id: 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
-    secret_access_key: : aH/cDn19WxfORY7CsWKcsiDlW/yggQoUrxbhnNV0
-    bucket: : taglog-build
+    secret_access_key: aH/cDn19WxfORY7CsWKcsiDlW/yggQoUrxbhnNV0
+    bucket: taglog-build
     region: ap-northeast-2
     skip_cleanup: true
     acl: private #zip 파일 접근을 private으로
