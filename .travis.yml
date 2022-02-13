@@ -23,7 +23,7 @@ notifications:
     on_failure: always # default: always
 
 before_deploy:
-  - zip -r taglog #파일 압축
+  - zip -r taglog * #파일 압축
   - mkdir -p deploy #travis가 설치된 위치에 배포 디렉토리 생성
   - mv taglog.zip deploy/taglog.zip
 deploy:
