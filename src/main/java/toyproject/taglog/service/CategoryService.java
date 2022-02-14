@@ -25,23 +25,23 @@ public class CategoryService {
     private final NoteRepository noteRepository;
     private final ValidateService validateService;
 
-    public List<Category> findCategoryByUserId(Long userId){
+    public List<Category> findCategoryByUserId(Long userId) {
         User user = validateService.validateUser(userId);
         return categoryRepository.findByUser(user);
     }
 
     @Transactional
-    public List<Category> updateCategory(CategoryDTO categoryDTO){
+    public List<Category> updateCategory(CategoryDTO categoryDTO) {
         Long categoryId = categoryDTO.getCategoryId();
         Category category = validateService.validateCategory(categoryId);
 
         int requestOrder = categoryDTO.getOrder();
-        if(requestOrder != category.getOrder()){
+        if (requestOrder != category.getOrder()) {
             //order 변경
             Long userId = categoryDTO.getUserId();
             categoryDSLRepository.relocateOrder(userId, requestOrder, 1);
             category.relocateCategory(requestOrder);
-        }else{
+        } else {
             category.updateCategoryName(categoryDTO.getName());
         }
 
@@ -70,7 +70,7 @@ public class CategoryService {
         return findCategoryByUserId(categoryDTO.getUserId());
     }
 
-    private List<Category> findCategoryGoeOrder(@NotNull Long userId, int order){
+    private List<Category> findCategoryGoeOrder(@NotNull Long userId, int order) {
         CategorySearchCondition condition = new CategorySearchCondition();
         condition.setUserId(userId);
         return categoryDSLRepository.findCategoryWithCondition(condition);

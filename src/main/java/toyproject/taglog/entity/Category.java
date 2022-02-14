@@ -12,7 +12,8 @@ import javax.persistence.*;
 @Getter
 public class Category {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "category_id")
     private Long id;
 
@@ -26,9 +27,6 @@ public class Category {
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @OneToMany(mappedBy = "category")
-//    private List<Note> note = new ArrayList<>();
-
     @Builder
     public Category(String name, int order, User user) {
         this.name = name;
@@ -41,11 +39,11 @@ public class Category {
         this.user = user;
     }
 
-    public void updateCategoryName(String name){
+    public void updateCategoryName(String name) {
         this.name = name;
     }
 
-    public void relocateCategory(int order){
+    public void relocateCategory(int order) {
         this.order = order;
     }
 }

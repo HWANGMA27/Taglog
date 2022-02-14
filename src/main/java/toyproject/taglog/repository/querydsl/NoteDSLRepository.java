@@ -22,7 +22,7 @@ import static toyproject.taglog.entity.QUser.user;
 public class NoteDSLRepository {
     private final JPAQueryFactory queryFactory;
 
-    public List<Note> findNotesWithCondition(NoteSearchCondition condition, Pageable pageable){
+    public List<Note> findNotesWithCondition(NoteSearchCondition condition, Pageable pageable) {
         return queryFactory
                 .selectFrom(note)
                 .where(userIdEq(condition.getUserId()),
@@ -37,7 +37,7 @@ public class NoteDSLRepository {
                 .fetch();
     }
 
-    public long countNotesWithCondition(NoteSearchCondition condition){
+    public long countNotesWithCondition(NoteSearchCondition condition) {
         return queryFactory
                 .select(note.count())
                 .from(note)

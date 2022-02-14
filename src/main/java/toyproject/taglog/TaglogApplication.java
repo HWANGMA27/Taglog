@@ -12,12 +12,12 @@ import javax.persistence.EntityManager;
 @SpringBootApplication
 public class TaglogApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TaglogApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(TaglogApplication.class, args);
+    }
 
-	@Bean
-	JPAQueryFactory createJpaQueryFactory(EntityManager em){
-		return new JPAQueryFactory(em);
-	}
+    @Bean
+    JPAQueryFactory createJpaQueryFactory(EntityManager em) {
+        return new JPAQueryFactory(em);
+    }
 }

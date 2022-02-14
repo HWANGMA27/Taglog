@@ -13,7 +13,8 @@ import javax.persistence.*;
 @Getter
 public class Note extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "note_id")
     private Long id;
 
@@ -25,9 +26,6 @@ public class Note extends BaseEntity {
 
     @Column(length = 2)
     private String delYn;
-
-//    @OneToMany(mappedBy = "note")
-//    private List<NoteTag> noteTag = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -44,19 +42,19 @@ public class Note extends BaseEntity {
         this.delYn = "N";
     }
 
-    public void updateUser(User user){
+    public void updateUser(User user) {
         this.user = user;
     }
 
-    public void updateCategory(Category category){
+    public void updateCategory(Category category) {
         this.category = category;
     }
 
-    public void updateNoteStatus(String delYn){
+    public void updateNoteStatus(String delYn) {
         this.delYn = delYn;
     }
 
-    public void updateContents(String title, String contents){
+    public void updateContents(String title, String contents) {
         this.title = title;
         this.contents = contents;
     }

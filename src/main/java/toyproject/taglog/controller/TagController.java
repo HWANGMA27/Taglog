@@ -32,13 +32,13 @@ public class TagController {
 
     @Operation(summary = "태그 전체 조회", description = "회원 Id로 태그를 전체 조회합니다.")
     @GetMapping("/all/{id}")
-    public ApiResult<List<TagDTO>> findAllTag(@Parameter(description = "회원 Id", in = ParameterIn.PATH) @PathVariable("id") Long userId){
+    public ApiResult<List<TagDTO>> findAllTag(@Parameter(description = "회원 Id", in = ParameterIn.PATH) @PathVariable("id") Long userId) {
         return ApiUtils.success(tagService.findTagByUserId(userId)
                 .stream()
                 .map(tag -> TagDTO.builder()
-                                .id(tag.getId())
-                                .name(tag.getName())
-                                .build())
+                        .id(tag.getId())
+                        .name(tag.getName())
+                        .build())
                 .distinct()
                 .collect(Collectors.toList()));
     }
@@ -46,7 +46,7 @@ public class TagController {
     @Operation(summary = "태그된 노트 조회", description = "회원 Id와 태그 Id로 노트를 조회합니다.")
     @GetMapping("/{tag_id}/user/{id}")
     public ApiResult<List<NoteDTO>> findNoteByTag(@Parameter(description = "회원 Id", in = ParameterIn.PATH) @PathVariable("id") Long userId,
-                                       @Parameter(description = "태그 Id", in = ParameterIn.PATH) @PathVariable("tag_id") Long tagId){
+                                                  @Parameter(description = "태그 Id", in = ParameterIn.PATH) @PathVariable("tag_id") Long tagId) {
         return ApiUtils.success(noteService.findNoteByTag(userId, tagId));
     }
 }

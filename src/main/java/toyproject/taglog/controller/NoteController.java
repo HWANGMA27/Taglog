@@ -41,48 +41,48 @@ public class NoteController {
 
     @Operation(summary = "단일 노트 조회", description = "노트 id로 단일 노트를 조회합니다.")
     @GetMapping("/{note_id}")
-    public ApiResult<NoteDTO> findNoteById(@Parameter(description = "노트 Id", in = ParameterIn.PATH) @PathVariable("note_id") Long noteId){
+    public ApiResult<NoteDTO> findNoteById(@Parameter(description = "노트 Id", in = ParameterIn.PATH) @PathVariable("note_id") Long noteId) {
         return ApiUtils.success(noteService.findNoteByIdAndDelYn(noteId, "N"));
     }
 
     @Operation(summary = "새노트 추가", description = "새로운 노트를 추가합니다.")
     @PostMapping
-    public ApiResult<NoteDTO> addNote(@RequestBody @Valid AddNoteRequest request){
+    public ApiResult<NoteDTO> addNote(@RequestBody @Valid AddNoteRequest request) {
         Note note = Note.builder()
-                        .title(request.getTitle())
-                        .contents(request.getContents())
-                        .build();
+                .title(request.getTitle())
+                .contents(request.getContents())
+                .build();
         List<Tag> tags = request.getTags()
                 .stream()
                 .map(tagDTO -> Tag.builder()
-                                .name(tagDTO.getName())
-                                .build())
+                        .name(tagDTO.getName())
+                        .build())
                 .collect(Collectors.toList());
         return ApiUtils.success(noteService.addNote(note, request.getUserId(), request.getCategoryId(), tags));
     }
 
     @Operation(summary = "노트 업데이트", description = "노트 제목, 컨텐츠, 태그를 업데이트합니다.")
     @PatchMapping
-    public ApiResult<NoteDTO> updateNote(@RequestBody @Valid NoteDTO noteDTO){
+    public ApiResult<NoteDTO> updateNote(@RequestBody @Valid NoteDTO noteDTO) {
         Note note = new Note(noteDTO.getTitle(), noteDTO.getContents());
         List<Tag> tags = noteDTO.getTags()
                 .stream()
                 .map(tagDTO -> Tag.builder()
-                                .name(tagDTO.getName())
-                                .build())
+                        .name(tagDTO.getName())
+                        .build())
                 .collect(Collectors.toList());
         return ApiUtils.success(noteService.updateNote(note, noteDTO.getNoteId(), noteDTO.getUserId(), noteDTO.getCategoryId(), tags));
     }
 
     @Operation(summary = "노트 카테고리 변경", description = "노트가 속한 카테고리를 변경합니다.")
     @PatchMapping("/category")
-    public void updateNoteCategory(@RequestBody @Valid NoteDTO noteDTO){
+    public void updateNoteCategory(@RequestBody @Valid NoteDTO noteDTO) {
         noteService.updateNoteCategory(noteDTO.getNoteId(), noteDTO.getCategoryId());
     }
 
     @Operation(summary = "노트를 삭제합니다.", description = "노트 id로 노트를 삭제합니다.")
     @DeleteMapping
-    public void deleteNote(@RequestBody @Valid DeleteNoteRequest request){
+    public void deleteNote(@RequestBody @Valid DeleteNoteRequest request) {
         noteService.deleteNote(request.getUserId(), request.getNoteId());
     }
 
@@ -104,7 +104,7 @@ public class NoteController {
         private String contents;
 
         @Schema(description = "노트에 포함될 태그")
-        private List<TagDTO> tags ;
+        private List<TagDTO> tags;
 
         @NotNull
         @Schema(description = "노트 작성자 Id")
@@ -143,7 +143,7 @@ public class NoteController {
         private String contents;
 
         @Schema(description = "노트에 포함될 태그")
-        private List<TagDTO> tags ;
+        private List<TagDTO> tags;
 
         @NotNull
         @Schema(description = "노트 Id")

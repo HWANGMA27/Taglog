@@ -22,13 +22,13 @@ public class NoteTagService {
     @Transactional
     public void addNoteTage(Note note, Tag tag) {
         NoteTag noteTag = NoteTag.builder()
-                                .note(note)
-                                .tag(tag)
-                                .build();
+                .note(note)
+                .tag(tag)
+                .build();
         noteTagRepository.save(noteTag);
     }
 
-    public List<NoteTag> findNoteTagByNoteId (Long noteId){
+    public List<NoteTag> findNoteTagByNoteId(Long noteId) {
         return noteTagRepository.findNoteTagByNoteId(noteId);
     }
 }

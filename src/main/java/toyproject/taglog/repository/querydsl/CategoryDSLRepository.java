@@ -18,7 +18,7 @@ import static toyproject.taglog.entity.QUser.user;
 public class CategoryDSLRepository {
     private final JPAQueryFactory queryFactory;
 
-    public List<Category> findCategoryWithCondition (CategorySearchCondition condition){
+    public List<Category> findCategoryWithCondition(CategorySearchCondition condition) {
         return queryFactory
                 .selectFrom(category)
                 .where(userIdEq(condition.getUserId()),
@@ -26,7 +26,8 @@ public class CategoryDSLRepository {
                 .join(category.user, user).fetchJoin()
                 .fetch();
     }
-    private BooleanExpression categoryGoe(Integer order){
+
+    private BooleanExpression categoryGoe(Integer order) {
         return order != null ? category.order.goe(order) : null;
     }
 

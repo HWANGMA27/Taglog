@@ -21,15 +21,15 @@ public class ValidateService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
-    public Note validateNote(Long noteId, String delYn){
+    public Note validateNote(Long noteId, String delYn) {
         return noteRepository.findByIdAndDelYn(noteId, delYn).orElseThrow(InvalidateNoteException::new);
     }
 
-    public Category validateCategory(Long categoryId){
+    public Category validateCategory(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(InvalidateCategoryException::new);
     }
 
-    public User validateUser(Long userId){
+    public User validateUser(Long userId) {
         return userRepository.findById(userId).orElseThrow(InvalidateUserException::new);
     }
 }

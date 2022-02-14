@@ -3,7 +3,7 @@ package toyproject.taglog.apiutills;
 import lombok.Data;
 
 @Data
-public class ApiError{
+public class ApiError {
     private final String message;
     private final int status;
 

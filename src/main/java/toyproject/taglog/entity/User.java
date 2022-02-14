@@ -13,7 +13,8 @@ import javax.persistence.*;
 @Getter
 public class User extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "user_id")
     private Long id;
 
@@ -38,13 +39,13 @@ public class User extends BaseEntity {
         this.role = role;
     }
 
-    public User updateUser(String name, String picture){
+    public User updateUser(String name, String picture) {
         this.name = name;
         this.picture = picture;
         return this;
     }
 
-    public String getRoleKey(){
+    public String getRoleKey() {
         return role.getKey();
     }
 }

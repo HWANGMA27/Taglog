@@ -20,9 +20,10 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+
     @Operation(summary = "유저 전체 조회", description = "전체 유저를 조회합니다.")
     @GetMapping("/all")
-    public ApiResult<List<UserDTO>> findAllUser(){
+    public ApiResult<List<UserDTO>> findAllUser() {
         return ApiUtils.success(userService.findAllUser());
     }
 }

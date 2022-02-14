@@ -29,7 +29,7 @@ public class NoteDTO {
 
     @Schema(description = "노트에 포함된 태그")
     private List<TagDTO> tags;
-    
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @Schema(description = "생성일자")
     private LocalDateTime createdTime;
@@ -45,7 +45,7 @@ public class NoteDTO {
     public NoteDTO() {
     }
 
-    public NoteDTO (Note note)  {
+    public NoteDTO(Note note) {
         this.noteId = note.getId();
         this.title = note.getTitle();
         this.contents = note.getContents();

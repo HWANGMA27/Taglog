@@ -12,7 +12,8 @@ import javax.persistence.*;
 @Getter
 public class NoteTag {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "note_tag_id")
     private Long id;
 

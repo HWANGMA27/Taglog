@@ -6,11 +6,11 @@ import toyproject.taglog.exception.ApiExceptionEntity;
 
 @Data
 public class ApiUtils {
-    public static <T>ApiResult<T> success(T response) {
+    public static <T> ApiResult<T> success(T response) {
         return new ApiResult<>(true, response, null);
     }
 
-    public static <T>ApiResult<T> error(ResponseEntity<ApiExceptionEntity> error){
+    public static <T> ApiResult<T> error(ResponseEntity<ApiExceptionEntity> error) {
         return new ApiResult<>(false, null, error);
     }
 }

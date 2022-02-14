@@ -26,13 +26,13 @@ public class TagService {
         List<Tag> tagList = new ArrayList<>();
 
         for (Tag tag : tags) {
-            Optional<Tag> tagByName= tagRepository.findTagByName(tag.getName());
-            if(tagByName.isEmpty()){
+            Optional<Tag> tagByName = tagRepository.findTagByName(tag.getName());
+            if (tagByName.isEmpty()) {
                 tagRepository.save(tag);
                 tagList.add(tag);
                 //중간 테이블에 매핑 데이터 추가
                 noteTagService.addNoteTage(note, tag);
-            }else{
+            } else {
                 Tag findTag = tagByName.get();
                 tagList.add(findTag);
                 noteTagService.addNoteTage(note, findTag);

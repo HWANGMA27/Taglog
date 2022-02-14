@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import toyproject.taglog.exception.ApiExceptionEntity;
 
 @Data
-public class ApiResult<T>{
+public class ApiResult<T> {
     private final boolean success;
     private final T response;
     private final ResponseEntity<ApiExceptionEntity> error;

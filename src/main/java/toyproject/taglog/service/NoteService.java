@@ -85,6 +85,7 @@ public class NoteService {
         Note findNote = validateService.validateNote(noteId, delYn);
         return new NoteDTO(findNote);
     }
+
     @Transactional
     public NoteDTO addNote(Note note, Long userId, Long categoryId, List<Tag> tagList) {
         //노트 추가
@@ -101,9 +102,9 @@ public class NoteService {
         NoteDTO noteDTO = new NoteDTO(note);
         noteDTO.setTags(tags.stream()
                 .map(tag -> TagDTO.builder()
-                                .id(tag.getId())
-                                .name(tag.getName())
-                                .build())
+                        .id(tag.getId())
+                        .name(tag.getName())
+                        .build())
                 .collect(Collectors.toList()));
         return noteDTO;
     }
@@ -138,9 +139,9 @@ public class NoteService {
         NoteDTO noteDTO = new NoteDTO(note);
         noteDTO.setTags(tagList.stream()
                 .map(tag -> TagDTO.builder()
-                                .id(tag.getId())
-                                .name(tag.getName())
-                                .build())
+                        .id(tag.getId())
+                        .name(tag.getName())
+                        .build())
                 .collect(Collectors.toList()));
         return noteDTO;
     }
@@ -150,7 +151,7 @@ public class NoteService {
         Note findNote = validateService.validateNote(noteId, "N");
         Category findCategory = validateService.validateCategory(categoryId);
         findNote.updateCategory(findCategory);
-     }
+    }
 
     public List<NoteDTO> findNoteByTag(Long userId, Long tagId) {
         List<Note> notes = findNoteByUserIdAndTagId(userId, tagId);
@@ -161,9 +162,9 @@ public class NoteService {
             List<Tag> tags = tagService.findTagByNoteId(note.getId());
             noteDTO.setTags(tags.stream()
                     .map(tag -> TagDTO.builder()
-                                    .id(tag.getId())
-                                    .name(tag.getName())
-                                    .build())
+                            .id(tag.getId())
+                            .name(tag.getName())
+                            .build())
                     .collect(Collectors.toList()));
             noteDTOS.add(noteDTO);
         }

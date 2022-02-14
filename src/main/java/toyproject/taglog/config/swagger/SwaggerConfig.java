@@ -14,7 +14,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 @EnableWebMvc
 public class SwaggerConfig {
     @Bean
-    public Docket restAPI(){
+    public Docket restAPI() {
         return new Docket(DocumentationType.OAS_30)
                 .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo())
@@ -24,7 +24,7 @@ public class SwaggerConfig {
                 .build();
     }
 
-    private ApiInfo apiInfo(){
+    private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("TagLog Spring Boot REST API")
                 .version("1.0")
