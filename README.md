@@ -46,36 +46,40 @@ SpringBoot, Java, JPA project, Travis CI, AWS (EC2 & RDS & S3 & CodePlay)
 
 적용 기술
 
-| Language | JavaScript, TypeScript |
+|  |  |
 | --- | --- |
+| Language | JavaScript, TypeScript |
 | Test |  |
 
 개발 툴
 
-| IDE  | Visual Studio Code |
+| | |
 | --- | --- |
+| IDE  | Visual Studio Code |
 | OS | Windows 10 |
 
 ### Backend(황명아)
 
 적용 기술
 
-| Framework | Spring Boot |
+|  |  |
 | --- | --- |
+| Framework | Spring Boot |
 |  | Spring Data JPA |
 |  | QueryDSL |
 | Test | JUnit |
 | Language | Java |
 | DB | AWS RDS MariaDB |
-| Server | AWS |
+| Server | AWS EC2 |
 | VC | Git/Github |
 | CI, CD | Travis, S3, CodeDeploy |
 | API 문서화 | SWAGGER |
 
 개발 툴
 
-| IDE | IntelliJ |
+|  |  |
 | --- | --- |
+| IDE | IntelliJ |
 | DB GUI | DBeaver |
 | OS | Mac OS |
 
