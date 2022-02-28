@@ -1,7 +1,7 @@
 # Taglog
 > 태그를 활용한 웹노트 API 서버
 
-SpringBoot, Java, JPA project, AWS EC2, AWS RDS, Travis CI
+SpringBoot, Java, JPA project, Travis CI, AWS (EC2 & RDS & S3 & CodePlay)
 
 작성한 콘텐츠를 검색 및 카테고리, 태그 sorting할 수 있는 서비스
 
@@ -42,7 +42,7 @@ SpringBoot, Java, JPA project, AWS EC2, AWS RDS, Travis CI
 
 요구사항에 따라 필요한 화면 Whimsical을 이용하여 그리기
 
-### Frontend
+### Frontend(현서림)
 
 적용 기술
 
@@ -56,7 +56,7 @@ SpringBoot, Java, JPA project, AWS EC2, AWS RDS, Travis CI
 | --- | --- |
 | OS | Windows 10 |
 
-### Backend
+### Backend(황명아)
 
 적용 기술
 
@@ -69,7 +69,7 @@ SpringBoot, Java, JPA project, AWS EC2, AWS RDS, Travis CI
 | DB | AWS RDS MariaDB |
 | Server | AWS |
 | VC | Git/Github |
-| CI, CD | Travis CI |
+| CI, CD | Travis, S3, CodeDeploy |
 | API 문서화 | SWAGGER |
 
 개발 툴
