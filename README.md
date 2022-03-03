@@ -1,7 +1,7 @@
 # Taglog
 > 태그를 활용한 웹노트 API 서버
 
-SpringBoot, Java, JPA project, Travis CI, AWS (EC2 & RDS & S3 & CodePlay)
+SpringBoot, Java, JPA project, Travis CI, AWS (EC2 & RDS & S3 & CodeDeploy)
 
 작성한 콘텐츠를 검색 및 카테고리, 태그 sorting할 수 있는 서비스
 
