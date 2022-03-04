@@ -36,3 +36,14 @@ deploy:
     acl: private #zip 파일 접근을 private으로
     local_dir: deploy #before_deploy에서 생성한 디렉토리. 여기에 있는 파일만 s3로 전송
     wait-until-deploy: true
+
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY #Travis에 저장한 키 변수 사용
+    secret_access_key: $AWS_SECRET_KEY #Travis에 저장한 키 변수 사용
+    bucket: taglog-build
+    key: taglog.zip
+    bundle-type: zip
+    application: taglog
+    deployment_group: taglog
+    region: ap-northeast-2
+    wait-until-deployed : true
