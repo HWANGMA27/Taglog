@@ -36,7 +36,7 @@ class CategoryServiceTest {
     Category category;
 
     @BeforeEach
-    public void beforeEach() throws Exception{
+    public void beforeEach() {
         user = new User("email", "name", "picture", Role.USER);
         userRepository.save(user);
 
@@ -50,7 +50,7 @@ class CategoryServiceTest {
 
     @DisplayName("사용자의 카테고리 출력 테스트")
     @Test
-    public void findCategoryTest() throws Exception{
+    public void findCategoryTest() {
         //when
         List<Category> result = categoryService.findCategoryByUserId(user.getId());
         //then
@@ -59,7 +59,7 @@ class CategoryServiceTest {
 
     @DisplayName("카테고리 추가 테스트")
     @Test
-    public void addCategoryTest() throws Exception{
+    public void addCategoryTest() {
         //given
         CategoryDTO category = new CategoryDTO(null, "테스트 카테고리3", 0, user.getId());
         categoryService.addCategory(category);
@@ -83,7 +83,7 @@ class CategoryServiceTest {
 
     @DisplayName("카테고리 삭제 테스트")
     @Test
-    public void deleteCategoryTest() throws Exception{
+    public void deleteCategoryTest() {
         //given
         Long userId = user.getId();
         Long categoryId = category.getId();
@@ -103,11 +103,11 @@ class CategoryServiceTest {
 
     @DisplayName("카테고리 이름 수정 테스트")
     @Test
-    public void updateCategoryNameTest() throws Exception{
+    public void updateCategoryNameTest() {
         //given
         category.updateCategoryName("업데이트");
         CategoryDTO categoryDTO = new CategoryDTO(category.getId(), category.getName(), category.getOrder(), category.getUser().getId());
-        categoryService.updateCategory(categoryDTO);
+        categoryService.updateCategoryName(categoryDTO);
         em.flush();
         em.clear();
 
@@ -123,11 +123,11 @@ class CategoryServiceTest {
 
     @DisplayName("카테고리 순서 수정 테스트")
     @Test
-    public void relocateCategoryTest() throws Exception{
+    public void relocateCategoryTest() {
         //given
         category.relocateCategory(1);
         CategoryDTO categoryDTO = new CategoryDTO(category.getId(), category.getName(), category.getOrder(), category.getUser().getId());
-        categoryService.updateCategory(categoryDTO);
+        categoryService.updateCategoryOrder(categoryDTO);
         em.flush();
         em.clear();
 

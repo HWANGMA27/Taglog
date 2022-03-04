@@ -48,10 +48,16 @@ public class CategoryController {
         return ApiUtils.success(convertToDTO(categoryService.addCategory(categoryDTO)));
     }
 
-    @Operation(summary = "카테고리 업데이트", description = "카테고리 순서, 제목을 업데이트합니다.")
-    @PatchMapping
-    public ApiResult<List<CategoryDTO>> updateCategory(@RequestBody @Valid CategoryDTO categoryDTO) {
-        return ApiUtils.success(convertToDTO(categoryService.updateCategory(categoryDTO)));
+    @Operation(summary = "카테고리 명 수정", description = "카테고리 명을 업데이트합니다.")
+    @PatchMapping("/name")
+    public ApiResult<List<CategoryDTO>> updateCategoryName(@RequestBody @Valid CategoryDTO categoryDTO) {
+        return ApiUtils.success(convertToDTO(categoryService.updateCategoryName(categoryDTO)));
+    }
+
+    @Operation(summary = "카테고리 순서 수정", description = "카테고리 순서를 업데이트합니다.")
+    @PatchMapping("/order")
+    public ApiResult<List<CategoryDTO>> updateCategoryOrder(@RequestBody @Valid CategoryDTO categoryDTO) {
+        return ApiUtils.success(convertToDTO(categoryService.updateCategoryOrder(categoryDTO)));
     }
 
     @Operation(summary = "카테고리 삭제", description = "카테고리를 삭제합니다.")

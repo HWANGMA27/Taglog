@@ -31,7 +31,15 @@ public class CategoryService {
     }
 
     @Transactional
-    public List<Category> updateCategory(CategoryDTO categoryDTO) {
+    public List<Category> updateCategoryName(CategoryDTO categoryDTO) {
+        Long categoryId = categoryDTO.getCategoryId();
+        Category category = validateService.validateCategory(categoryId);
+        category.updateCategoryName(categoryDTO.getName());
+        return findCategoryByUserId(categoryDTO.getUserId());
+    }
+
+    @Transactional
+    public List<Category> updateCategoryOrder(CategoryDTO categoryDTO) {
         Long categoryId = categoryDTO.getCategoryId();
         Category category = validateService.validateCategory(categoryId);
 
@@ -41,8 +49,6 @@ public class CategoryService {
             Long userId = categoryDTO.getUserId();
             categoryDSLRepository.relocateOrder(userId, requestOrder, 1);
             category.relocateCategory(requestOrder);
-        } else {
-            category.updateCategoryName(categoryDTO.getName());
         }
 
         return findCategoryByUserId(categoryDTO.getUserId());
