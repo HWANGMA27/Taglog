@@ -49,13 +49,15 @@ public class NoteDSLRepository {
                 .fetch().get(0);
     }
 
-    public List<Note> findNoteByUserIdAndTagId(Long userId, Long tagId) {
+    public List<Note> findNoteByUserIdAndTagId(Long userId, Long tagId, Pageable pageable) {
         return queryFactory
                 .select(note)
                 .from(noteTag)
                 .join(noteTag.tag, tag)
                 .join(noteTag.note, note)
                 .where(note.user.id.eq(userId), tag.id.eq(tagId), note.delYn.eq("N"))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
     }
 

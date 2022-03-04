@@ -6,6 +6,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.transaction.annotation.Transactional;
 import toyproject.taglog.dto.NoteDTO;
 import toyproject.taglog.entity.*;
@@ -44,7 +47,7 @@ class NoteServiceTest {
     Tag tag, tag2;
 
     @BeforeEach
-    public void beforeEach() throws Exception{
+    public void beforeEach() {
         user = new User("email", "name", "picture", Role.USER);
         userRepository.save(user);
 
@@ -73,7 +76,7 @@ class NoteServiceTest {
 
     @DisplayName("노트 삭제 테스트")
     @Test
-    public void deleteNoteTest() throws Exception{
+    public void deleteNoteTest() {
         //when
         Long noteId = note.getId();
         noteService.deleteNote(user.getId(), noteId);
@@ -83,9 +86,7 @@ class NoteServiceTest {
         List<NoteTag> noteTagByNoteId = noteTagService.findNoteTagByNoteId(noteId);
 
         //then
-        Assertions.assertThrows(InvalidateNoteException.class, () -> {
-            noteService.findNoteByIdAndDelYn(note.getId(), "N");
-        });
+        Assertions.assertThrows(InvalidateNoteException.class, () -> noteService.findNoteByIdAndDelYn(note.getId(), "N"));
         //노트 삭제 후 연결된 중간테이블 데이터 삭제 확인
         org.assertj.core.api.Assertions.assertThat(noteTagByNoteId.size())
                 .isEqualTo(0);
@@ -93,7 +94,7 @@ class NoteServiceTest {
 
     @DisplayName("노트 추가 테스트")
     @Test
-    public void addNoteTest() throws Exception{
+    public void addNoteTest() {
         //given
         Note note = new Note("추가 테스트", "추가테스트 컨텐츠");
         Long userId = user.getId();
@@ -115,7 +116,7 @@ class NoteServiceTest {
 
     @DisplayName("노트 카테고리 변경 테스트")
     @Test
-    public void updateNoteCategoryTest() throws Exception{
+    public void updateNoteCategoryTest() {
         //given
         Category newCategory = new Category("테스트용 카테고리", user);
         categoryRepository.save(newCategory);
@@ -135,7 +136,7 @@ class NoteServiceTest {
 
     @DisplayName("노트 컨텐츠 변경 테스트")
     @Test
-    public void updateNoteTest() throws Exception{
+    public void updateNoteTest() {
         //given
         note.updateContents("바뀐 타이틀", "바뀐 컨텐츠");
         ArrayList<Tag> tags = new ArrayList<>();
@@ -154,7 +155,7 @@ class NoteServiceTest {
 
     @DisplayName("선택한 태그가 있는 노트만 가져오는 테스트")
     @Test
-    public void findNoteByTagTest() throws Exception{
+    public void findNoteByTagTest() {
         //given
         Tag newTag = new Tag("새로운 태그");
         tagRepository.save(newTag);
@@ -171,9 +172,10 @@ class NoteServiceTest {
         em.flush();
         em.clear();
 
+        Pageable pageable = PageRequest.of(0,5);
         //when
-        List<NoteDTO> noteByTag = noteService.findNoteByTag(user.getId(), newTag.getId());
+        Slice<NoteDTO> noteByTag = noteService.findNoteByTag(user.getId(), newTag.getId(), pageable);
         //then
-        org.assertj.core.api.Assertions.assertThat(noteByTag.size()).isEqualTo(1);
+        org.assertj.core.api.Assertions.assertThat(noteByTag.getNumberOfElements()).isEqualTo(1);
     }
 }

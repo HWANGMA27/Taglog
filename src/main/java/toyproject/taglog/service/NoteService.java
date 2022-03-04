@@ -41,16 +41,20 @@ public class NoteService {
         List<Note> results = noteDSLRepository.findNotesWithCondition(condition, pageable);
         long listSize = noteDSLRepository.countNotesWithCondition(condition);
 
-        List<NoteDTO> returnDTO = new ArrayList<>();
+        List<NoteDTO> returnDTO = setNoteTags(results);
+        return new PageImpl<>(returnDTO, pageable, listSize);
+    }
 
-        for (Note result : results) {
+    private List<NoteDTO> setNoteTags(List<Note> notes) {
+        List<NoteDTO> resultDTO = new ArrayList<>();
+        for (Note result : notes) {
             NoteDTO noteDTO = new NoteDTO(result);
 
             List<TagDTO> tagDTOList = findTagByNote(result);
             noteDTO.setTags(tagDTOList);
-            returnDTO.add(noteDTO);
+            resultDTO.add(noteDTO);
         }
-        return new PageImpl<>(returnDTO, pageable, listSize);
+        return resultDTO;
     }
 
     public Slice<NoteDTO> findNoteByCategory(Long userId, Long categoryId, Pageable pageable) {
@@ -153,27 +157,20 @@ public class NoteService {
         findNote.updateCategory(findCategory);
     }
 
-    public List<NoteDTO> findNoteByTag(Long userId, Long tagId) {
-        List<Note> notes = findNoteByUserIdAndTagId(userId, tagId);
-        List<NoteDTO> noteDTOS = new ArrayList<>();
+    public Slice<NoteDTO> findNoteByTag(Long userId, Long tagId, Pageable pageable) {
+        NoteSearchCondition condition = new NoteSearchCondition();
+        condition.setUserId(userId);
+        condition.setTagId(tagId);
 
-        for (Note note : notes) {
-            NoteDTO noteDTO = new NoteDTO(note);
-            List<Tag> tags = tagService.findTagByNoteId(note.getId());
-            noteDTO.setTags(tags.stream()
-                    .map(tag -> TagDTO.builder()
-                            .id(tag.getId())
-                            .name(tag.getName())
-                            .build())
-                    .collect(Collectors.toList()));
-            noteDTOS.add(noteDTO);
-        }
+        List<Note> notes = findNoteByUserIdAndTagId(userId, tagId, pageable);
+        long listSize = noteDSLRepository.countNotesWithCondition(condition);
+        List<NoteDTO> noteDTOS = setNoteTags(notes);
 
-        return noteDTOS;
+        return new PageImpl<>(noteDTOS, pageable, listSize);
     }
 
-    public List<Note> findNoteByUserIdAndTagId(Long userId, Long tagId) {
-        return noteDSLRepository.findNoteByUserIdAndTagId(userId, tagId);
+    public List<Note> findNoteByUserIdAndTagId(Long userId, Long tagId, Pageable pageable) {
+        return noteDSLRepository.findNoteByUserIdAndTagId(userId, tagId, pageable);
     }
 
     public void bulkDeleteNoteByCategoryId(Long categoryId) {
