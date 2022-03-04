@@ -63,6 +63,7 @@ public class CategoryController {
     @Operation(summary = "카테고리 삭제", description = "카테고리를 삭제합니다.")
     @DeleteMapping
     public ApiResult<List<CategoryDTO>> deleteCategory(@RequestBody @Valid CategoryDTO categoryDTO) {
+        noteService.bulkDeleteNoteByCategoryId(categoryDTO.getCategoryId());
         return ApiUtils.success(convertToDTO(categoryService.deleteCategory(categoryDTO.getUserId(), categoryDTO.getCategoryId())));
     }
 
