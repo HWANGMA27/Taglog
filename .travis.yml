@@ -23,9 +23,14 @@ notifications:
     on_failure: always # default: always
 
 before_deploy:
-  - zip -r taglog * #파일 압축
-  - mkdir -p deploy #travis가 설치된 위치에 배포 디렉토리 생성
-  - mv taglog.zip deploy/taglog.zip
+  - mkdir -p before-deploy
+  - cp scripts/*.sh before-deploy/
+  - cp appspec.yml before-deploy/
+  - cp bulid/libs/*.jar before-deploy/
+  - cd before-deploy && zip -r before-deploy *
+  - cd ../ && mkdir -p deploy
+  - mv before-deploy/before-deploy.zip deploy/taglog.zip
+
 deploy:
   - provider: s3
     access_key_id: $AWS_ACCESS_KEY #Travis에 저장한 키 변수 사용
@@ -43,7 +48,7 @@ deploy:
     bucket: taglog-build
     key: taglog.zip
     bundle-type: zip
-    application: taglog
-    deployment_group: taglog
+    application: taglog #Codedeploy에 설정한 application 명
+    deployment_group: taglog #Codedeploy에 설정한 deployment_group
     region: ap-northeast-2
     wait-until-deployed : true
